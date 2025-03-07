@@ -6,7 +6,7 @@ const Navbar = () => {
         <Link to="/">case<span className="text-indigo-600">Indigo</span></Link>
       </h1>
       <ul className="text-sm font-medium">
-        <li className="inline-block pr-3">Sign Up</li>
+        <li className="inline-block pr-3"><Link to='/signup'>Sign up</Link></li>
         <li className="inline-block"><Link to='/login'>Login</Link></li>
       </ul>
     </nav>
