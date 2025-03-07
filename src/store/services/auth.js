@@ -1,5 +1,5 @@
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
-import { signInWithEmailAndPassword,createUserWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider  } from "firebase/auth";
+import { signInWithEmailAndPassword,createUserWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider, updateProfile  } from "firebase/auth";
 import { auth } from "../../utils/firebase";
 
 export const authApi = createApi({
@@ -20,10 +20,13 @@ export const authApi = createApi({
       }),
     
     signup: builder.mutation({
-        queryFn: async({_email, _password}) =>{
+        queryFn: async({_email, _password, _name}) =>{
             try {
-                const userCredential = await  createUserWithEmailAndPassword(auth, _email, _password);
-                const {email, uid, displayName} = userCredential.user
+                let userCredential = await  createUserWithEmailAndPassword(auth, _email, _password);
+                await updateProfile(userCredential.user, {
+                    displayName: _name
+                })
+                const {email, uid, displayName} = userCredential.user;
                 return {data: {email, uid, displayName} }
 
             } catch(error) {

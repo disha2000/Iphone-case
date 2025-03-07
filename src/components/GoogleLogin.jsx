@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useGoogleSignInMutation } from "../store/services/auth";
 
 const GoogleLogin = () => {
-  const [googleSignIn, { error }] = useGoogleSignInMutation();
+  const [googleSignIn] = useGoogleSignInMutation();
   const handleGoogleSignIn = async () => {
     await googleSignIn();
   };
