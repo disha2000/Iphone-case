@@ -1,35 +1,24 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
-import { useState, useRef } from "react";
+import { useState, useRef} from "react";
 import { checkValidate } from "../utils/validate";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../utils/firebase";
 import GoogleLogin from "./GoogleLogin";
+import { useLoginMutation } from "../store/services/auth";
 
 const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const [errorMessage, setErrorMessage] = useState({});
+  const [login, { error }] = useLoginMutation();
+  console.log('error', error)
   const handleFormSubmit = async () => {
     const [_email, _password] = [emailRef.current, passwordRef.current];
     const { errorField, isFormValid } = checkValidate([_email, _password]);
     setErrorMessage(errorField);
     if (!isFormValid) return;
 
-    await signInWithEmailAndPassword(auth, _email, _password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        setErrorMessage((prevState) => ({
-          ...prevState,
-          signIn: errorCode + errorMessage,
-        }));
-      });
+    await login({ _email: _email.value, _password: _password.value });
   };
 
   return (
@@ -70,9 +59,9 @@ const Login = () => {
             </p>
           )}
         </div>
-        {errorMessage.signIn && (
+        {error && (
           <p className="text-red-700 font-medium text-xs text-right pt-1">
-            {errorMessage.signIn}
+            {error.data}
           </p>
         )}
         <Button
