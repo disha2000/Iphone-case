@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useSignoutMutation } from "../store/services/auth";
 import { persistor } from "../store/appStore";
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const user = useSelector((store) => store.user.user);
@@ -21,27 +22,31 @@ const Navbar = () => {
           case<span className="text-indigo-600">Indigo</span>
         </Link>
       </h1>
-      <ul className="text-sm font-medium">
+      <ul className="text-sm font-medium flex h-full items-center justify-between">
         {!user && (
-          <li className="inline-block pr-3">
-            <Link to="/signup">Sign up</Link>
-          </li>
-        )}
-        {!user && (
-          <li className="inline-block">
-            <Link to="/login">Login</Link>
-          </li>
+          <>
+            <li className="inline-block pr-3">
+              <Link to="/signup">Sign up</Link>
+            </li>
+            <li className="inline-block">
+              <Link to="/login">Login</Link>
+            </li>
+          </>
         )}
         {isAdmin && (
           <li className="inline-block">
             <Link to="/login">Dashboard</Link>
           </li>
         )}
+        <li className=" h-8 w-px bg-gray-300 inline-block mx-2"></li>
         {user && (
           <li className="inline-block">
             <button onClick={() => handleSignOut()}>SignOut</button>
           </li>
         )}
+        <li>
+          <Button className="bg-button-background hover:bg-button-background-hover w-full cursor-pointer"><Link to="/createcase">Create Case</Link></Button>
+        </li>
       </ul>
     </nav>
   );

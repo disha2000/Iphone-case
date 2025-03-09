@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import Signup from "./components/Signup.jsx";
 import { PersistGate } from "redux-persist/integration/react";
+import CreateCase from "./components/CreateCase";
 
 const routerConfig = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const routerConfig = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
+      },
+      {
+        path: "/createcase",
+        element: <CreateCase />,
       },
     ],
   },

@@ -10,6 +10,40 @@
   html {
     font-family: "Recursive", sans-serif;
   }
+  @keyframes scroll-up {
+    from {
+      transform: translateY(0%);
+    }
+    to {
+      transform: translateY(-50%);
+    }
+  }
+  
+  .review-column {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 600px;
+    position: relative;
+  }
+  
+  .review-content {
+    display: flex;
+    flex-direction: column;
+    animation: scroll-up var(--duration, 10s) linear infinite;
+    will-change: transform;
+    align-items: center;
+    margin: auto;
+  }
+  
+  .testimonial {
+    background: white;
+    margin: 12px;
+    padding: 20px;
+    border-radius: 24px;
+    flex-shrink: 0;
+  }
+  
 }
 
 :root {

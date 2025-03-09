@@ -1,7 +1,7 @@
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Outlet } from "react-router-dom";
-
+import { Toaster} from 'sonner'
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./utils/firebase";
@@ -30,6 +30,7 @@ function App() {
 
   return (
     <div className="flex flex-col justify-between  min-h-[100vh]">
+      <Toaster  closeButton/>
       <Navbar />
       <Outlet />
       <Footer />
