@@ -45,7 +45,7 @@ const Navbar = () => {
           </li>
         )}
         <li>
-          <Button className="bg-button-background hover:bg-button-background-hover w-full cursor-pointer"><Link to="/createcase">Create Case</Link></Button>
+        <Link to="/configure"> <Button className="bg-button-background hover:bg-button-background-hover w-full cursor-pointer">Create Case</Button></Link>
         </li>
       </ul>
     </nav>

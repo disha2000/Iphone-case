@@ -10,11 +10,13 @@ import Home from "./components/Home";
 import Signup from "./components/Signup.jsx";
 import { PersistGate } from "redux-persist/integration/react";
 import CreateCase from "./components/CreateCase";
+import Configure from "./components/Configure";
+import CustomizeCoverDesign from "./components/CustomizeCoverDesign";
 
 const routerConfig = createBrowserRouter([
   {
     path: "/",
-    element: <App></App>,
+    element: <App/>,
     children: [
       {
         path: "/",
@@ -29,8 +31,21 @@ const routerConfig = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "/createcase",
-        element: <CreateCase />,
+        path: "/configure",
+        element: <Configure />,
+        children: [
+          {
+            path: "/configure",
+            element: <CreateCase />
+          },
+          {
+            path: '/configure/design/:id',
+            element: <CustomizeCoverDesign/>
+          },
+          {
+            path:'/configure/preview'
+          }
+        ]
       },
     ],
   },

@@ -7,11 +7,11 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./utils/firebase";
 import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "./store/slices/userSlice";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 function App() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       console.log('changed')
@@ -20,7 +20,7 @@ function App() {
         dispatch(addUser({ uid, email, displayName }));
       } else {
         dispatch(removeUser());
-        navigate("/")
+        // navigate("/")
       }
     });
     return () =>{
