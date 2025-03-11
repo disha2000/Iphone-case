@@ -85,21 +85,9 @@ const CustomizeCoverDesign = () => {
   const [droppedImage, setDroppedImage] = useState(
     `https://res.cloudinary.com/do2lx5yjd/image/upload/${id}`
   );
-  const [isSelected, setIsSelected] = useState(false);
 
   const phoneRef = useRef(null);
-  const rndRef = useRef(null);
 
-  // Click outside handler to hide border & resize handles
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (rndRef.current && !rndRef.current.contains(event.target)) {
-        setIsSelected(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
   const handleDrop = (event) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
@@ -107,17 +95,15 @@ const CustomizeCoverDesign = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setDroppedImage(reader.result); // Set image source
-        setPosition({ x: 50, y: 50 }); // Reset position
+        setDroppedImage(reader.result); 
+        setPosition({ x: 50, y: 50 });
       };
       reader.readAsDataURL(file);
     }
   };
 
-  console.log(id);
 
   const handleMaterialOnClick = (index) => {
-    console.log("coming here", index);
     setCustomizeForm((prevState) => ({
       ...prevState,
       material: index,
@@ -131,76 +117,68 @@ const CustomizeCoverDesign = () => {
   };
 
   const handleColorChange = (index) => {
-    console.log("here");
     setCustomizeForm((prevState) => ({
       ...prevState,
       color: index,
     }));
   };
   return (
-    <div className="my-6 grid gap-1.5 grid-cols-1 md:grid-cols-[65%_35%]">
+    <div className="my-6 grid gap-1.5 grid-cols-1 md:grid-cols-[65%_35%] relative">
       <div
         ref={phoneRef}
-        className="parent-drag-container bg-gray-100 border-dashed border border-gray-400 rounded-2xl h-[37.5rem] w-full flex items-center justify-center"
+        className="parent-drag-container bg-gray-100 border-dashed border border-gray-400 overflow-hidden rounded-2xl h-[37.5rem] w-full flex items-center justify-center relative"
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
       >
         <div
-          className={`relative w-full max-w-[16rem] aspect-[896/1831] overflow-hidden rounded-[40px] border-black ${
+          className={`relative w-full max-w-[16rem] aspect-[896/1831]  rounded-[40px] border-black ${
             iphoneColorsConfig[customizeForm.color].className
           }`}
         >
+          <div className="absolute inset-0 bottom-px left-[3px] right-[3px] top-px z-40 rounded-[32px] shadow-[0_0_0_99999px_rgba(229,231,235,0.92)] pointer-events-none"></div>
           <img
             src="/phone-template.png"
             alt="Phone Image"
-            className="w-full h-full object-cover absolute top-0 left-0 z-50 pointer-events-none"
+            className="w-full h-full object-cover absolute top-0 left-0 z-40 pointer-events-none"
           />
 
-<Rnd
-  position={position}
-  size={size}
-  bounds=".parent-drag-container"
-  enableResizing={{
-    top: false,
-    right: false,
-    bottom: false,
-    left: false,
-    topRight: true,
-    bottomRight: true,
-    bottomLeft: true,
-    topLeft: true,
-  }}
-  enableUserSelectHack={false}
-  onDragStop={(e, d) => setPosition({ x: d.x, y: d.y })}
-  onResizeStop={(e, direction, ref, delta, pos) => {
-    const parent = phoneRef.current.getBoundingClientRect();
-    const newWidth = Math.min(ref.offsetWidth, parent.width);
-    const newHeight = Math.min(ref.offsetHeight, parent.height);
+          <Rnd
+            position={position}
+            size={size}
+            bounds=".parent-drag-container"
+            enableResizing={{
+              top: true,
+              right: true,
+              bottom: true,
+              left: true,
+              topRight: true,
+              bottomRight: true,
+              bottomLeft: true,
+              topLeft: true,
+            }}
+            enableUserSelectHack={false}
+            onDragStop={(e, d) => setPosition({ x: d.x, y: d.y })}
+            onResizeStop={(e, direction, ref, delta, pos) => {
+              const parent = phoneRef.current.getBoundingClientRect();
+              const newWidth = Math.min(ref.offsetWidth, parent.width);
+              const newHeight = Math.min(ref.offsetHeight, parent.height);
 
-    setSize({ width: newWidth, height: newHeight });
-    setPosition(pos);
-  }}
-  dragHandleClassName="drag-handle"
-  className="absolute top-0 left-0 z-10"
-  minWidth={50}
-  minHeight={50}
->
-  {/* Outer Wrapper for the Border */}
-  <div className="relative w-full h-full border-2 border-green-400 shadow-[0px_0px_6px_2px_rgba(34,197,94,0.8)] pointer-events-none">
-    {/* Inner Wrapper to Crop the Image */}
-    <div className="w-full h-full overflow-hidden">
-      <img
-        className="w-full h-full object-contain pointer-events-auto select-none drag-handle"
-        src={droppedImage}
-        alt="Draggable Image"
-      />
-    </div>
-  </div>
+              setSize({ width: newWidth, height: newHeight });
+              setPosition(pos);
+            }}
+            dragHandleClassName="drag-handle"
+            className="absolute top-0 left-0 border-[3px] border-gray-950"
+            minWidth={50}
+            minHeight={50}
+          >
+            <img
+              className="w-full h-full object-fill pointer-events-auto select-none drag-handle absolute bg-transparent inset-0"
+              src={droppedImage}
+              alt="Draggable Image"
+            />
 
-  {/* Invisible Overlay to Keep Dragging Functional */}
-  <div className="absolute inset-0 bg-transparent drag-handle cursor-grab" />
-</Rnd>
-
+            <div className="absolute inset-0 bg-transparent drag-handle cursor-grab" />
+          </Rnd>
         </div>
       </div>
 
