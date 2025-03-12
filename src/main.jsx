@@ -12,6 +12,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import CreateCase from "./components/CreateCase";
 import Configure from "./components/Configure";
 import CustomizeCoverDesign from "./components/CustomizeCoverDesign";
+import PhoneReviewPage from "./components/PhoneReviewPage";
 
 const routerConfig = createBrowserRouter([
   {
@@ -43,7 +44,8 @@ const routerConfig = createBrowserRouter([
             element: <CustomizeCoverDesign/>
           },
           {
-            path:'/configure/preview'
+            path:'/configure/preview/:id',
+            element: <PhoneReviewPage/>
           }
         ]
       },

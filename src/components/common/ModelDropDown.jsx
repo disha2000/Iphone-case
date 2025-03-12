@@ -1,23 +1,19 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { mobileListConfig } from "@/utils/config";
 
-const mobileListConfig = [
-  { value: "iPhone X" },
-  { value: "iPhone 11" },
-  { value: "iPhone 12" },
-];
 
-export default function ModelDropDown() {
+export default function ModelDropDown({handleConfigOnClick}) {
   const [checked, setChecked] = useState(0);
-
+  const handleOnChange = (index) => {
+    setChecked(index)
+    handleConfigOnClick(index, 'model')
+  }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="my-1.5">
@@ -30,7 +26,7 @@ export default function ModelDropDown() {
           <DropdownMenuCheckboxItem
             key={index}
             checked={checked === index}
-            onCheckedChange={() => setChecked(index)}
+            onCheckedChange={() => handleOnChange(index)}
           >
             {phone.value}
           </DropdownMenuCheckboxItem>

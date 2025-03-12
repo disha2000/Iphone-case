@@ -101,7 +101,7 @@ const CreateCase = () => {
         {...getRootProps()}
       >
         {!complete ? (
-          <>
+          <div className="flex flex-col justify-center items-center">
             <input {...getInputProps()} />
 
             {isDragOver && !isLoading && <SquareMousePointer />}
@@ -139,7 +139,7 @@ const CreateCase = () => {
             )}
 
             {!isSuccess && <p className="text-xs">PNG, JPG, JPEG</p>}
-          </>
+          </div>
         ) : (
           <div className="text-sm h-full w-full flex flex-col justify-center items-center text-gray-600">
             <OrbitProgress color="#6366f1" size="small" text="" textColor="" />

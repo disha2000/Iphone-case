@@ -16,12 +16,12 @@ export const stepsConfig = [
 export const materialsConfig = [
     {
       title: "Silicone",
-      price: "$0.00",
+      price: 0,
       description: "",
     },
     {
       title: "Soft Polycarbonate",
-      price: "$0.00",
+      price: 5.00,
       description: "Scratch-resistant coating",
     },
   ];
@@ -47,12 +47,18 @@ export  const iphoneColorsConfig = [
 export const finishesConfig = [
     {
       title: "Smooth Finish",
-      price: "$0.00",
+      price: 0,
       description: "",
     },
     {
       title: "Textured Finish",
-      price: "$3.00",
+      price: 3,
       description: "Soft grippy texture",
     },
   ];
+
+export const mobileListConfig = [
+  { value: "iPhone X" },
+  { value: "iPhone 11" },
+  { value: "iPhone 12" },
+];

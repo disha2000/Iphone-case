@@ -1,23 +1,69 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Rnd } from "react-rnd";
 import { useParams } from "react-router-dom";
 import domtoimage from "dom-to-image";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "@/utils/firebase";
 import PhoneConfigurationPanel from "./common/PhoneConfigurationPanel";
-
-import { iphoneColorsConfig } from "@/utils/config";
+import { useUploadImageMutation } from "@/store/services/imageApi";
+import { finishesConfig, iphoneColorsConfig, materialsConfig } from "@/utils/config";
+import { toast } from "sonner";
+import { useAddCustomPhoneCoverMutation } from "../store/services/PhoneApi";
+import { useNavigate } from "react-router-dom";
 
 const CustomizeCoverDesign = () => {
   const [customizeForm, setCustomizeForm] = useState({
     color: 0,
     material: 0,
     finish: 0,
+    model: 0,
+    price: 19
   });
   const { id } = useParams();
   const [position, setPosition] = useState({ x: 50, y: 50 });
   const [size, setSize] = useState({ width: 200, height: 200 });
-  const [droppedImage, setDroppedImage] = useState(`https://res.cloudinary.com/do2lx5yjd/image/upload/${id}`)
+  const [droppedImage, setDroppedImage] = useState(
+    `https://res.cloudinary.com/do2lx5yjd/image/upload/${id}`
+  );
+  const [
+    uploadImage,
+    {
+      isError: isImageUploadError,
+      error: imageUploadError,
+      data: imageUploadResponse,
+      isSuccess: isImageUploadSuccess,
+    },
+  ] = useUploadImageMutation();
+
+  const navigate = useNavigate();
+  const [addCustomPhoneCover, { error: dbError, isLoading: isLoadingDb }] =
+    useAddCustomPhoneCoverMutation();
+  if (isImageUploadError) {
+    toast(imageUploadError.error);
+  }
+  if (dbError) {
+    toast(dbError.error);
+  }
+  useEffect(() => {
+    if (isImageUploadSuccess) {
+      setCustomizeForm((prevState) => ({
+        ...prevState,
+        imageUrl: imageUploadResponse?.public_id,
+      }));
+    }
+  }, [imageUploadResponse, isImageUploadSuccess]);
+  
+  useEffect(() => {
+    if (isImageUploadSuccess) {
+      const uploadDataInDb = async () => {
+        await addCustomPhoneCover({
+          data: customizeForm,
+          id: id,
+        });
+        navigate(`/configure/preview/${id}`);
+      };
+      uploadDataInDb();
+    }
+  
+  }, [customizeForm.imageUrl])
 
   const phoneRef = useRef(null);
   const containerRef = useRef(null);
@@ -36,36 +82,21 @@ const CustomizeCoverDesign = () => {
     }
   };
 
-  const handleMaterialOnClick = (index) => {
-    setCustomizeForm((prevState) => ({
-      ...prevState,
-      material: index,
-    }));
-  };
-  const handleFinishOnClick = (index) => {
-    setCustomizeForm((prevState) => ({
-      ...prevState,
-      finish: index,
-    }));
-  };
-
-  const handleColorChange = (index) => {
-    setCustomizeForm((prevState) => ({
-      ...prevState,
-      color: index,
-    }));
-  };
-
-  const addDocumentWithCustomId = async () => {
-    try {
-      const docRef = doc(db, "PhoneCases", id);
-      await setDoc(docRef, customizeForm);
-      console.log("Document added with ID:", id);
-    } catch (error) {
-      console.error("Error adding document with custom ID:", error);
+  const handleConfigOnClick = (index, name) => {
+    let configPrice = 0;
+    const basePrice = 19;
+    if (name === 'material') {
+      configPrice = materialsConfig?.[index].price
     }
+    if (name === 'finish') {
+      configPrice = finishesConfig?.[index].price
+    }
+    setCustomizeForm((prevState) => ({
+      ...prevState,
+      [name]: index,
+      price: basePrice + configPrice
+    }));
   };
-
   async function saveConfig() {
     try {
       const phoneElement = phoneRef.current;
@@ -74,28 +105,31 @@ const CustomizeCoverDesign = () => {
         console.error("Phone container not found!");
         return;
       }
-      const originalOverflow = phoneElement.style.overflow;
 
+      const originalOverflow = phoneElement.style.overflow;
       phoneElement.style.overflow = "hidden";
 
       await new Promise((resolve) => setTimeout(resolve, 0));
 
       const dataUrl = await domtoimage.toPng(phoneElement, {
         quality: 1,
-        bgcolor: null,
+        width: phoneElement.getBoundingClientRect().width,
+        height: phoneElement.getBoundingClientRect().height,
       });
+
       phoneElement.style.overflow = originalOverflow;
 
-      const a = document.createElement("a");
-      a.href = dataUrl;
-      a.download = "screenshot.png";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      addDocumentWithCustomId();
-      console.log("✅ Screenshot captured successfully!");
+      const blob = await fetch(dataUrl).then((res) => res.blob());
+
+      const file = new File([blob], "custom-cover.png", { type: "image/png" });
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "custom-cover");
+
+      await uploadImage({ endpoint: "image/upload", formData });
     } catch (error) {
-      console.error("❌ Error capturing screenshot:", error);
+      toast(error);
     }
   }
 
@@ -162,10 +196,9 @@ const CustomizeCoverDesign = () => {
 
       <PhoneConfigurationPanel
         customizeForm={customizeForm}
-        handleColorChange={handleColorChange}
-        handleMaterialOnClick={handleMaterialOnClick}
-        handleFinishOnClick={handleFinishOnClick}
+        handleConfigOnClick={handleConfigOnClick}
         saveConfig={saveConfig}
+        isLoadingDb={isLoadingDb}
       />
     </div>
   );

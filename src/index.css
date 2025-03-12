@@ -19,7 +19,11 @@
     }
   }
 
- 
+  .OP-annulus-rli-bounding-box .OP-annulus-indicator{
+    width: 2em !important;
+    height: 2em !important;
+    z-index: 20;
+  }
   
   .review-column {
     display: flex;

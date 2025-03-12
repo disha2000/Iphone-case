@@ -3,13 +3,14 @@ import ModelDropDown from "./ModelDropDown";
 import MateiralForm from "./MaterialForm";
 import FinishinForm from "./FinishinForm";
 import { Button } from "../ui/button";
+import { OrbitProgress } from "react-loading-indicators";
 
 const PhoneConfigurationPanel = ({
   customizeForm,
   handleColorChange,
-  handleMaterialOnClick,
-  handleFinishOnClick,
-  saveConfig
+  handleConfigOnClick,
+  saveConfig,
+  isLoadingDb,
 }) => {
   return (
     <div className="w-full flex flex-col justify-between h-[37.5rem]">
@@ -36,7 +37,7 @@ const PhoneConfigurationPanel = ({
                     ? `outline-offset-2 outline-solid ${color.outline}`
                     : ""
                 }`}
-                  onClick={() => handleColorChange(index)}
+                  onClick={() => handleConfigOnClick(index, 'color')}
                 ></div>
               );
             })}
@@ -44,24 +45,30 @@ const PhoneConfigurationPanel = ({
 
           <div>
             <label className="font-medium text-sm text-gray-600">Model</label>
-            <ModelDropDown />
+            <ModelDropDown handleConfigOnClick={handleConfigOnClick} />
           </div>
 
           <MateiralForm
-            handleMaterialOnClick={handleMaterialOnClick}
+            handleMaterialOnClick={handleConfigOnClick}
             selectedMaterial={customizeForm?.material}
           />
           <FinishinForm
-            handleFinishOnClick={handleFinishOnClick}
+            handleFinishOnClick={handleConfigOnClick}
             selectedFinish={customizeForm?.finish}
           />
         </div>
       </div>
       <div className="final-price w-ful p-4">
         <div className="grid pt-2.5 grid-cols-[30%_70%] items-center">
-          <p className="text-lg font-semibold">{"$19.00"}</p>
-          <Button className="w-full text-sm bg-indigo-500" onClick={saveConfig}>
+          <p className="text-lg font-semibold">{`$${customizeForm.price}`}</p>
+          <Button
+            className="w-full text-sm bg-button-background hover:bg-button-background-hover flex flex-row items-center cursor-pointer"
+            onClick={saveConfig}
+          >
             Continue
+            {isLoadingDb && (
+              <OrbitProgress color="white" size="small" text="" textColor="" />
+            )}
           </Button>
         </div>
       </div>
