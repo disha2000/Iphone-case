@@ -1,12 +1,10 @@
 import { activeTab } from "./context/activateTab";
 import { useContext } from "react";
 const Step = ({ step, index }) => {
-  const {active} = useContext(activeTab)
-
-  console.log(index, active);
+  const { active } = useContext(activeTab);
   return (
     <div
-      className={`border-1 border-gray-200 md:border-b-4 md:border-b-gray-300 md:border-l-1 border-l-4 border-l-gray-200 ${
+      className={`border-1 border-gray-200 md:border-b-4 md:border-b-gray-300 md:border-l-1 border-l-4 border-l-gray-200 py-5 ${
         active === index
           ? "border-l-gray-500 md:border-b-gray-500 "
           : "border-l-gray-200 md:border-b-gray-200"

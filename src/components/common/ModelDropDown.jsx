@@ -21,7 +21,7 @@ export default function ModelDropDown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="my-1.5">
-        <div variant="outline" className="border-1 py-1.5 px-2 cursor-pointer text-sm rounded-sm hover:outline hover:outline-indigo-500">
+        <div variant="outline" className="border-1 py-1.5 px-3 mx-1 cursor-pointer text-sm rounded-sm hover:outline hover:outline-indigo-500">
           {mobileListConfig[checked].value}
         </div>
       </DropdownMenuTrigger>
