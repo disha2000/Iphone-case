@@ -15,7 +15,8 @@ const CustomizeCoverDesign = () => {
     material: 0,
     finish: 0,
     model: 0,
-    price: 19
+    price: 19,
+    isCustom: true,
   });
   const { id } = useParams();
   const [position, setPosition] = useState({ x: 50, y: 50 });
@@ -34,36 +35,15 @@ const CustomizeCoverDesign = () => {
   ] = useUploadImageMutation();
 
   const navigate = useNavigate();
-  const [addCustomPhoneCover, { error: dbError, isLoading: isLoadingDb }] =
+  const [addCustomPhoneCover, { error: dbError, isLoading: isLoadingDb, isSuccess: isSuccessDB}] =
     useAddCustomPhoneCoverMutation();
+
   if (isImageUploadError) {
     toast(imageUploadError.error);
   }
   if (dbError) {
     toast(dbError.error);
   }
-  useEffect(() => {
-    if (isImageUploadSuccess) {
-      setCustomizeForm((prevState) => ({
-        ...prevState,
-        imageUrl: imageUploadResponse?.public_id,
-      }));
-    }
-  }, [imageUploadResponse, isImageUploadSuccess]);
-  
-  useEffect(() => {
-    if (isImageUploadSuccess) {
-      const uploadDataInDb = async () => {
-        await addCustomPhoneCover({
-          data: customizeForm,
-          id: id,
-        });
-        navigate(`/configure/preview/${id}`);
-      };
-      uploadDataInDb();
-    }
-  
-  }, [customizeForm.imageUrl])
 
   const phoneRef = useRef(null);
   const containerRef = useRef(null);
@@ -84,11 +64,13 @@ const CustomizeCoverDesign = () => {
 
   const handleConfigOnClick = (index, name) => {
     let configPrice = 0;
-    const basePrice = 19;
+    let basePrice = customizeForm.price
     if (name === 'material') {
+      basePrice = customizeForm.price - materialsConfig[customizeForm['material']]?.price;
       configPrice = materialsConfig?.[index].price
     }
     if (name === 'finish') {
+      basePrice = customizeForm.price - finishesConfig[customizeForm['finish']]?.price;
       configPrice = finishesConfig?.[index].price
     }
     setCustomizeForm((prevState) => ({
@@ -127,7 +109,18 @@ const CustomizeCoverDesign = () => {
       formData.append("file", file);
       formData.append("upload_preset", "custom-cover");
 
-      await uploadImage({ endpoint: "image/upload", formData });
+      const response = await uploadImage({ endpoint: "image/upload", formData });
+
+      if (response?.data?.public_id) {
+        const updatedForm = {
+          ...customizeForm,
+          imageUrl: response.data.public_id,
+        };
+  
+        await addCustomPhoneCover({ data: updatedForm, id });
+  
+        navigate(`/configure/preview/${id}`);
+      }
     } catch (error) {
       toast(error);
     }

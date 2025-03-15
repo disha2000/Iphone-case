@@ -7,15 +7,19 @@ import {
   finishesConfig,
 } from "@/utils/config";
 import { Check } from "lucide-react";
-import { Button } from "./ui/button";
+import AddToCart from "./common/AddToCart";
+import { useEffect } from "react";
+
 
 const PhoneReviewPage = () => {
   const { id } = useParams();
-  const { data, error, isLoading } = useGetCustomPhoneCoverQuery(id);
+  const { data, error, isLoading, refetch } = useGetCustomPhoneCoverQuery(id);
+  useEffect(() => {
+    refetch()
+  }, [])
   if (isLoading) {
     return (
       <div className="w-full h-full">
-        {" "}
         <OrbitProgress color="white" size="small" text="" textColor="" />
       </div>
     );
@@ -26,7 +30,7 @@ const PhoneReviewPage = () => {
   const { finish, material, imageUrl, model, price } = data;
   const phoneCase = `https://res.cloudinary.com/do2lx5yjd/image/upload/${imageUrl}`;
   return (
-    <div className="grid gap-1.5 grid-cols-1 md:grid-cols-[40%_60%] py-9 text-center md:text-left">
+    <div className="grid gap-1.5 grid-cols-1 md:grid-cols-[40%_60%] py-9 md:text-left text-center">
       <img src={phoneCase} className="m-auto" />
       <div className="w-full h-full my-4">
         <h1 className="text-2xl font-bold">
@@ -56,13 +60,13 @@ const PhoneReviewPage = () => {
             <p>$19.00</p>
           </div>
 
-          {finish && (
+          {finish !== 0 && (
             <div className="flex flex-row justify-between">
-              <p>{finishesConfig[finish]?.title}</p>
-              <p>${finishesConfig[finish]?.price.toFixed(2)}</p>
+              <p>{finishesConfig[material]?.title}</p>
+              <p>${finishesConfig[material]?.price?.toFixed(2)}</p>
             </div>
           )}
-          {finish && (
+          {material !== 0 && (
             <div className="flex flex-row justify-between">
               <p>{materialsConfig[material]?.title}</p>
               <p>${materialsConfig[material]?.price?.toFixed(2)}</p>
@@ -74,10 +78,10 @@ const PhoneReviewPage = () => {
             <p className="font-bold">${price?.toFixed(2)}</p>
           </div>
         </div>
+        <div className="mt-6">
+        <AddToCart data={data} id={id} key={id}/>
 
-        <Button className="my-5 float-end text-sm bg-button-background hover:bg-button-background-hover flex flex-row items-center cursor-pointer">
-          Add To Cart
-        </Button>
+        </div>
       </div>
     </div>
   );

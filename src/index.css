@@ -19,6 +19,9 @@
     }
   }
 
+  .underline {
+    text-decoration: underline;
+  }
   .OP-annulus-rli-bounding-box .OP-annulus-indicator{
     width: 2em !important;
     height: 2em !important;

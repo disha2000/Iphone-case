@@ -7,7 +7,6 @@ import { OrbitProgress } from "react-loading-indicators";
 
 const PhoneConfigurationPanel = ({
   customizeForm,
-  handleColorChange,
   handleConfigOnClick,
   saveConfig,
   isLoadingDb,

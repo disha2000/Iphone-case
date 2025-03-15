@@ -13,6 +13,7 @@ import CreateCase from "./components/CreateCase";
 import Configure from "./components/Configure";
 import CustomizeCoverDesign from "./components/CustomizeCoverDesign";
 import PhoneReviewPage from "./components/PhoneReviewPage";
+import Cart from "./components/Cart";
 
 const routerConfig = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const routerConfig = createBrowserRouter([
           }
         ]
       },
+      {
+        path: "/cart",
+        element: <Cart/>
+      }
     ],
   },
 ]);

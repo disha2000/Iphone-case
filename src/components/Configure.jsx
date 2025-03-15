@@ -8,9 +8,9 @@ const Configure = () => {
   const [activeTabState, setActiveTabState] = useState(0);
 
   useEffect(() => {
-    if (location.pathname.includes("design")) {
+    if (location.pathname.toLowerCase().includes("design")) {
       setActiveTabState(1);
-    } else if (location.pathname.includes("preview")) {
+    } else if (location.pathname.toLowerCase().includes("preview")) {
       setActiveTabState(2);
     } else {
       setActiveTabState(0);
