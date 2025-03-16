@@ -1,24 +1,28 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
-import { useState, useRef} from "react";
+import { useState, useRef } from "react";
 import { checkValidate } from "../utils/validate";
 import GoogleLogin from "./GoogleLogin";
 import { useLoginMutation } from "../store/services/auth";
+import { useNavigate, useLocation } from "react-router-dom";
+
 
 const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const [errorMessage, setErrorMessage] = useState({});
   const [login, { error }] = useLoginMutation();
-  console.log('error', error)
+  const navigate = useNavigate();
+  const location = useLocation();
   const handleFormSubmit = async () => {
     const [_email, _password] = [emailRef.current, passwordRef.current];
     const { errorField, isFormValid } = checkValidate([_email, _password]);
     setErrorMessage(errorField);
     if (!isFormValid) return;
-
     await login({ _email: _email.value, _password: _password.value });
+    const redirectTo = location.state?.from?.pathname || "/";
+    navigate(redirectTo, { replace: true });
   };
 
   return (
@@ -65,7 +69,7 @@ const Login = () => {
           </p>
         )}
         <Button
-          className="bg-button-background hover:bg-button-background-hover w-full mb-3.5"
+          className="bg-button-background hover:bg-button-background-hover w-full mb-3.5 cursor-pointer"
           onClick={() => handleFormSubmit()}
         >
           Continue

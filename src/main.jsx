@@ -14,15 +14,32 @@ import Configure from "./components/Configure";
 import CustomizeCoverDesign from "./components/CustomizeCoverDesign";
 import PhoneReviewPage from "./components/PhoneReviewPage";
 import Cart from "./components/Cart";
+import Dashboard from "./components/Dashboard";
+import Unauthorized from "./components/Unauthorized";
+import ProtectedRoute from "./components/routes/ProtectedRoute";
+import ErrorPage from "./components/ErrorPage";
+import BagPage from "./components/BagPage";
+import PaymentPage from "./components/PaymentPage";
 
 const routerConfig = createBrowserRouter([
   {
     path: "/",
-    element: <App/>,
+    element: <App />,
+    errorElement: <ErrorPage/>,
     children: [
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/dashboard",
+        element: <ProtectedRoute checkIsAdmin={true} />,
+        children: [
+          {
+            path: "/dashboard",
+            element: <Dashboard />,
+          },
+        ],
       },
       {
         path: "/signup",
@@ -38,21 +55,41 @@ const routerConfig = createBrowserRouter([
         children: [
           {
             path: "/configure",
-            element: <CreateCase />
+            element: <CreateCase />,
           },
           {
-            path: '/configure/design/:id',
-            element: <CustomizeCoverDesign/>
+            path: "/configure/design/:id",
+            element: <CustomizeCoverDesign />,
           },
           {
-            path:'/configure/preview/:id',
-            element: <PhoneReviewPage/>
+            path: "/configure/preview/:id",
+            element: <PhoneReviewPage />,
+          },
+        ],
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
+        children: [
+          {
+            path: "/cart",
+            element: <BagPage/>
+          },
+          {
+            path: "/cart/payment",
+            element:<ProtectedRoute/>,
+            children:[
+              {
+                path:'/cart/payment',
+                element:<PaymentPage/>,
+              }
+            ]
           }
         ]
       },
       {
-        path: "/cart",
-        element: <Cart/>
+        path: '/Unauthorized',
+        element:<Unauthorized/>
       }
     ],
   },

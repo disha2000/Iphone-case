@@ -1,9 +1,7 @@
 import CartStepts from "./CartSteps";
 import { useSelector } from "react-redux";
 import { Button } from "./ui/button";
-import { Link } from "react-router-dom";
-import CartItems from "./CartItems";
-import PriceSection from "./PriceSection";
+import { Link, Outlet } from "react-router-dom";
 
 const Cart = () => {
   const carts = useSelector((store) => store.cart.carts);
@@ -12,12 +10,7 @@ const Cart = () => {
       {carts?.length > 0 ? (
         <div className="py-3">
           <CartStepts />
-          <h1 className="font-bold text-lg"> My bag ({carts?.length} items)</h1>
-          <div className="w-full h-full flex md:flex-row flex-col gap-3">
-            <CartItems carts={carts} />
-            <div className="border-1 md:min-h-screen md:w-0 w-full border-gray-100"></div>
-            <PriceSection carts={carts} />
-          </div>
+          <Outlet context={[carts]}/>
         </div>
       ) : (
         <div className="h-full w-full flex flex-col items-center justify-center text-lg/10">

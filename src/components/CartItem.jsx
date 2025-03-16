@@ -28,7 +28,7 @@ const CartItem = ({ cart }) => {
     }
   }, [cart.quantity]);
   return (
-    <div className="flex flex-row justify-evenly items-center p-3.5 rounded-lg border-1 border-gray-200 relative">
+    <div className="md:w-[90%] flex flex-row justify-evenly items-center p-3.5 rounded-lg border-1 border-gray-200 relative">
       <img
         src={phoneCaseImage}
         alt="Phone Image"

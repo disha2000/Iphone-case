@@ -9,7 +9,7 @@ const PriceSection = ({ carts }) => {
     }, 0);
     return totalPrice;
   }, [carts]);
-  console.log(calculatePrice);
+
   return (
     <div className="w-full md:w-[40%] lg:w-[30%] my-8 px-2">
       <h1>Price Details (1 Item)</h1>
@@ -26,7 +26,11 @@ const PriceSection = ({ carts }) => {
         <p>Total Amount</p>
         <p>${calculatePrice}</p>
       </div>
-      <Button className="mt-2 bg-button-background hover:bg-button-background-hover w-full cursor-pointer">PLACE ORDER</Button>
+      <Link to="/cart/payment">
+        <Button className="mt-2 bg-button-background hover:bg-button-background-hover w-full cursor-pointer">
+          PLACE ORDER
+        </Button>
+      </Link>
     </div>
   );
 };

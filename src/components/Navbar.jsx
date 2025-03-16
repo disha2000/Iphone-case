@@ -5,11 +5,13 @@ import { persistor } from "../store/appStore";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const user = useSelector((store) => store.user.user);
   const [signout] = useSignoutMutation();
   const location = useLocation();
+  const navigate = useNavigate();
   console.log(location);
   const [isCart, setIsCart] = useState(false);
   const carts = useSelector((store) => store.cart.carts);
@@ -25,6 +27,7 @@ const Navbar = () => {
     await signout().then(() => {
       persistor.flush();
     });
+    navigate("/");
   };
   return (
     <nav className="h-14 bg-white/10 border-b-1 border-gray-200 backdrop-blur-3xl fixed w-full flex items-center px-[5%] justify-between z-[100] ">
@@ -48,18 +51,30 @@ const Navbar = () => {
             )}
             {isAdmin && (
               <li className="inline-block">
-                <Link to="/login">Dashboard</Link>
+                <Link to="/dashboard">Dashboard</Link>
               </li>
             )}
-            <li className="inline-block pl-3">
-              <Link to="/cart">Cart</Link>({carts?.length})
+
+            <li className="inline-block px-3">
+              <Link to="/cart">Cart ({carts?.length})</Link>
+              {/* <div className="flex flex-row"> Cart 
+              <div className="border-l-4 border-r-4 w-[25px] h-[0px] border-b-[20px] border-b-indigo-400 border-l-transparent border-r-transparent">
+</div>
+             
+              </div> */}
             </li>
-            <li className=" h-8 w-px bg-gray-300 inline-block mx-2"></li>
             {user && (
               <li className="inline-block">
-                <button onClick={() => handleSignOut()}>SignOut</button>
+                <button
+                  className=" cursor-pointer"
+                  onClick={() => handleSignOut()}
+                >
+                  SignOut
+                </button>
               </li>
             )}
+
+            <li className=" h-8 w-px bg-gray-300 inline-block mx-2"></li>
 
             {!isAdmin && (
               <li>
@@ -72,8 +87,7 @@ const Navbar = () => {
             )}
           </>
         ) : (
-          <>
-          </>
+          <></>
         )}
       </ul>
     </nav>

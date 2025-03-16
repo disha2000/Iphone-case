@@ -8,7 +8,7 @@ const GoogleLogin = () => {
   };
   return (
     <Button
-      className="w-full bg-sign-in-background text-black border-1 border-input-border hover:bg-sign-in-background-hover"
+      className="w-full bg-sign-in-background text-black border-1 border-input-border hover:bg-sign-in-background-hover cursor-pointer"
       onClick={() => handleGoogleSignIn()}
     >
       <img
