@@ -2,7 +2,7 @@ import CartStepts from "./CartSteps";
 import { useSelector } from "react-redux";
 import { Button } from "./ui/button";
 import { Link, Outlet } from "react-router-dom";
-
+import EmptyCart from "./EmptyCart";
 const Cart = () => {
   const carts = useSelector((store) => store.cart.carts);
   return (
@@ -13,16 +13,7 @@ const Cart = () => {
           <Outlet context={[carts]}/>
         </div>
       ) : (
-        <div className="h-full w-full flex flex-col items-center justify-center text-lg/10">
-          <img src="/empty-cart.svg" className="size-56" />
-          <h1 className="font-bold">Hey, your bag feels so light!</h1>
-          <p className="font-medium">Let’s add some items in your bag</p>
-          <Link to="/">
-            <Button className="bg-button-background hover:bg-button-background-hover cursor-pointer">
-              START SHOPPING
-            </Button>
-          </Link>
-        </div>
+       <EmptyCart/>
       )}
     </div>
   );
