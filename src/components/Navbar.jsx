@@ -57,11 +57,6 @@ const Navbar = () => {
             {!isAdmin && (
               <li className="inline-block px-3">
                 <Link to="/cart">Cart ({carts?.length})</Link>
-                {/* <div className="flex flex-row"> Cart 
-              <div className="border-l-4 border-r-4 w-[25px] h-[0px] border-b-[20px] border-b-indigo-400 border-l-transparent border-r-transparent">
-</div>
-             
-              </div> */}
               </li>
             )}
             {user && (

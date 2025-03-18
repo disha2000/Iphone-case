@@ -16,6 +16,7 @@ const ProtectedRoute = ({checkIsAdmin = false}) => {
   if (!protectedConditions && checkIsAdmin) {
     return  <Navigate to="/unauthorized" />
   }
+  console.log(protectedConditions)
   return protectedConditions ? <Outlet /> : <Navigate to="/login" state={{from:location}} replace/>;
 };
 export default ProtectedRoute;

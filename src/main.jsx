@@ -21,6 +21,7 @@ import ErrorPage from "./components/ErrorPage";
 import BagPage from "./components/BagPage";
 import PaymentPage from "./components/PaymentPage";
 import NewPhoneCover from "./components/NewPhoneCover";
+import PublicRoute from "./components/routes/PublicRoute";
 
 const routerConfig = createBrowserRouter([
   {
@@ -48,11 +49,23 @@ const routerConfig = createBrowserRouter([
       },
       {
         path: "/signup",
-        element: <Signup />,
+        element: <PublicRoute/>,
+        children: [
+          {
+            path: '/signup',
+            element: <Signup/>
+          }
+        ]
       },
       {
         path: "/login",
-        element: <Login />,
+        element: <PublicRoute/>,
+        children: [
+          {
+            path: '/login',
+            element: <Login/>
+          }
+        ]
       },
       {
         path: "/configure",
