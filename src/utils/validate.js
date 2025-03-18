@@ -40,3 +40,8 @@ const isPasswordValid = (password) =>
   );
 
 const isNameValid = (name) => /^[A-Za-z' -]+$/.test(name);
+
+
+export const checkProductInfoValidate = () => {
+  
+}

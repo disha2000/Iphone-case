@@ -20,6 +20,7 @@ import ProtectedRoute from "./components/routes/ProtectedRoute";
 import ErrorPage from "./components/ErrorPage";
 import BagPage from "./components/BagPage";
 import PaymentPage from "./components/PaymentPage";
+import NewPhoneCover from "./components/NewPhoneCover";
 
 const routerConfig = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const routerConfig = createBrowserRouter([
             path: "/dashboard",
             element: <Dashboard />,
           },
+          {
+            path: "/dashboard/newphonecover",
+            element: <NewPhoneCover/>
+          }
         ],
       },
       {

@@ -6,7 +6,8 @@ import { checkValidate } from "../utils/validate";
 import GoogleLogin from "./GoogleLogin";
 import { useLoginMutation } from "../store/services/auth";
 import { useNavigate, useLocation } from "react-router-dom";
-
+import WrappedContainer from "./common/WrappedContainer";
+import Divider from "./common/Divider";
 
 const Login = () => {
   const emailRef = useRef();
@@ -26,8 +27,8 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row md:justify-around  lg:px-[10%] md:px-[5%] px-[2%] items-center text-center lg:items-start lg:text-left mt-[57px]">
-      <div className="md:w-6/12 lg:w-4/12 text-center w-8/12 m-auto pt-16">
+    <WrappedContainer className="mt-[57px] flex">
+      <div className="md:w-6/12 lg:w-4/12 text-center w-8/12 m-auto h-full">
         <h1 className="font-bold pb-5 text-2xl">Sign In</h1>
         <div className="mb-3.5">
           <Label htmlFor="email" className="pb-1.5 text-label-foreground">
@@ -69,14 +70,17 @@ const Login = () => {
           </p>
         )}
         <Button
-          className="bg-button-background hover:bg-button-background-hover w-full mb-3.5 cursor-pointer"
+          className="bg-button-background hover:bg-button-background-hover w-full cursor-pointer"
           onClick={() => handleFormSubmit()}
         >
           Continue
         </Button>
+        <div className="my-4">
+          <Divider />
+        </div>
         <GoogleLogin />
       </div>
-    </div>
+    </WrappedContainer>
   );
 };
 export default Login;

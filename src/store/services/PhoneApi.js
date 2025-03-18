@@ -21,6 +21,9 @@ export const phoneApi = createApi({
       },
      
     }),
+    addManualPhoneCover: build.mutation({
+
+    }),
     getCustomPhoneCover: build.query({
         queryFn: async (id) => {
           try {

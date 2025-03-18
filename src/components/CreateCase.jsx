@@ -95,9 +95,9 @@ const CreateCase = () => {
   });
 
   return (
-    <div className="h-screen">
+    <div className="min-h-[500px]">
       <div
-        className="bg-linear-to-r/srgb from-slate-50 to-slate-100 h-[70%] my-10 flex flex-col items-center justify-center rounded-4xl border-1"
+        className="bg-linear-to-r/srgb from-slate-50 to-slate-100 h-[500px] my-10 flex flex-col items-center justify-center rounded-4xl border-1"
         {...getRootProps()}
       >
         {!complete ? (

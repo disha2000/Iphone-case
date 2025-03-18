@@ -1,21 +1,24 @@
-import CartStepts from "./CartSteps";
+import CartSteps from "./CartSteps";
 import { useSelector } from "react-redux";
-import { Button } from "./ui/button";
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import EmptyCart from "./EmptyCart";
+import WrappedContainer from "./common/WrappedContainer";
+
 const Cart = () => {
   const carts = useSelector((store) => store.cart.carts);
+
   return (
-    <div className="lg:px-[10%] md:px-[5%] px-[3%] mt-[57px] min-h-screen">
+    <WrappedContainer className="lg:px-[10%] md:px-[5%] px-[3%] mt-[57px]">
       {carts?.length > 0 ? (
         <div className="py-3">
-          <CartStepts />
-          <Outlet context={[carts]}/>
+          <CartSteps />
+          <Outlet context={[carts]} />
         </div>
       ) : (
-       <EmptyCart/>
+        <EmptyCart />
       )}
-    </div>
+    </WrappedContainer>
   );
 };
+
 export default Cart;

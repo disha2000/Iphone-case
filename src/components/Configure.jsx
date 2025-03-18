@@ -2,6 +2,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import Steps from "./Steps";
 import { activeTab } from "./context/activateTab";
 import { useState, useEffect } from "react";
+import WrappedContainer from "./common/WrappedContainer";
 
 const Configure = () => {
   const location = useLocation();
@@ -19,10 +20,10 @@ const Configure = () => {
 
   return (
     <activeTab.Provider value={{ active: activeTabState }}>
-      <div className="lg:px-[10%] md:px-[5%] px-[3%] mt-[57px] min-h-screen w-full">
+      <WrappedContainer className="lg:px-[10%] md:px-[5%] px-[3%] mt-[57px]">
         <Steps />
         <Outlet />
-      </div>
+      </WrappedContainer>
     </activeTab.Provider>
   );
 };

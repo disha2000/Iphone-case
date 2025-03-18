@@ -12,7 +12,6 @@ const Navbar = () => {
   const [signout] = useSignoutMutation();
   const location = useLocation();
   const navigate = useNavigate();
-  console.log(location);
   const [isCart, setIsCart] = useState(false);
   const carts = useSelector((store) => store.cart.carts);
   const isAdmin = user?.email === import.meta.env.VITE_ADMIN_EMAIL;
@@ -50,19 +49,21 @@ const Navbar = () => {
               </>
             )}
             {isAdmin && (
-              <li className="inline-block">
+              <li className="inline-block pr-3">
                 <Link to="/dashboard">Dashboard</Link>
               </li>
             )}
 
-            <li className="inline-block px-3">
-              <Link to="/cart">Cart ({carts?.length})</Link>
-              {/* <div className="flex flex-row"> Cart 
+            {!isAdmin && (
+              <li className="inline-block px-3">
+                <Link to="/cart">Cart ({carts?.length})</Link>
+                {/* <div className="flex flex-row"> Cart 
               <div className="border-l-4 border-r-4 w-[25px] h-[0px] border-b-[20px] border-b-indigo-400 border-l-transparent border-r-transparent">
 </div>
              
               </div> */}
-            </li>
+              </li>
+            )}
             {user && (
               <li className="inline-block">
                 <button
@@ -74,7 +75,9 @@ const Navbar = () => {
               </li>
             )}
 
-            <li className=" h-8 w-px bg-gray-300 inline-block mx-2"></li>
+            {!isAdmin && (
+              <li className=" h-8 w-px bg-gray-300 inline-block mx-2"></li>
+            )}
 
             {!isAdmin && (
               <li>

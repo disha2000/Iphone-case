@@ -5,6 +5,8 @@ import { useState, useRef } from "react";
 import { checkValidate } from "../utils/validate";
 import GoogleLogin from "./GoogleLogin";
 import { useSignupMutation } from "../store/services/auth";
+import WrappedContainer from "./common/WrappedContainer";
+import Divider from "./common/Divider";
 
 const Signup = () => {
   const emailRef = useRef();
@@ -34,8 +36,8 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row md:justify-around  lg:px-[10%] md:px-[5%] px-[2%] items-center text-center lg:items-start lg:text-left mt-[57px]">
-      <div className="md:w-6/12 lg:w-4/12 text-center w-8/12 m-auto pt-16">
+    <WrappedContainer className="mt-[57px]">
+      <div className="md:w-6/12 lg:w-4/12 text-center w-8/12 m-auto">
         <h1 className="font-bold pb-5 text-2xl">Create your account</h1>
         <p className="pb-7 text-slate-600">
           Welcome back! Please sign in to continue.
@@ -97,14 +99,17 @@ const Signup = () => {
           </p>
         )}
         <Button
-          className="bg-button-background hover:bg-button-background-hover w-full mb-3.5"
+          className="bg-button-background hover:bg-button-background-hover w-full"
           onClick={() => handleFormSubmit()}
         >
           Continue
         </Button>
+        <div className="my-3.5">
+          <Divider />
+        </div>
         <GoogleLogin />
       </div>
-    </div>
+    </WrappedContainer>
   );
 };
 export default Signup;
