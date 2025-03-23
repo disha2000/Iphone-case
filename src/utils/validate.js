@@ -41,7 +41,37 @@ const isPasswordValid = (password) =>
 
 const isNameValid = (name) => /^[A-Za-z' -]+$/.test(name);
 
+const isNumberValid = (number) =>  /^-?\d+$/.test(number)
 
-export const checkProductInfoValidate = () => {
-  
+export const checkProductInfoValidate = (formData) => {
+  let isFormValid = true;
+  const errorField = {};
+  formData.forEach((field) => {
+    console.log(field)
+    const {type, value, name} = field
+    switch(type) {
+      case 'text' : 
+      if (!isNameValid(value)) {
+        errorField[name] = `Invalid ${name}!`;
+        isFormValid = false;
+      }
+      break
+      case 'number' :
+        if (!isNumberValid(value)) {
+          errorField[name] = `Invalid ${name}!`;
+          isFormValid = false;
+        }
+        break;
+      
+      case 'file' : 
+      console.log(field.files.length)
+      if (!field.files.length) {
+        errorField[name] = `Add ${name}!`;
+        isFormValid = false;
+      }
+      break;
+    }
+  })
+  return { errorField, isFormValid };
+
 }

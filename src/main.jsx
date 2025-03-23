@@ -22,6 +22,7 @@ import BagPage from "./components/BagPage";
 import PaymentPage from "./components/PaymentPage";
 import NewPhoneCover from "./components/NewPhoneCover";
 import PublicRoute from "./components/routes/PublicRoute";
+import CoverList from "./components/CoverList";
 
 const routerConfig = createBrowserRouter([
   {
@@ -40,11 +41,17 @@ const routerConfig = createBrowserRouter([
           {
             path: "/dashboard",
             element: <Dashboard />,
+            children: [
+              {
+                index: true,
+                element: <CoverList />,
+              },
+              {
+                path: "newphonecover",
+                element: <NewPhoneCover />,
+              },
+            ],
           },
-          {
-            path: "/dashboard/newphonecover",
-            element: <NewPhoneCover/>
-          }
         ],
       },
       {

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Rnd } from "react-rnd";
 import { useParams } from "react-router-dom";
 import domtoimage from "dom-to-image";
@@ -29,13 +29,11 @@ const CustomizeCoverDesign = () => {
     {
       isError: isImageUploadError,
       error: imageUploadError,
-      data: imageUploadResponse,
-      isSuccess: isImageUploadSuccess,
     },
   ] = useUploadImageMutation();
 
   const navigate = useNavigate();
-  const [addCustomPhoneCover, { error: dbError, isLoading: isLoadingDb, isSuccess: isSuccessDB}] =
+  const [addCustomPhoneCover, { error: dbError, isLoading: isLoadingDb}] =
     useAddCustomPhoneCoverMutation();
 
   if (isImageUploadError) {
