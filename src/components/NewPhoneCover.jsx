@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
-import { useRef, useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { checkProductInfoValidate } from "@/utils/validate";
 import { useAddCustomPhoneCoverMutation } from "@/store/services/PhoneApi";
@@ -8,75 +8,110 @@ import { useUploadImageMutation } from "@/store/services/imageApi";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { OrbitProgress } from "react-loading-indicators";
+import { useGetCustomPhoneCoverQuery } from "../store/services/PhoneApi";
+import { useSearchParams } from "react-router-dom";
+import { ImageURL } from "@/utils/config";
 
 const NewPhoneCover = () => {
-  const [image, setImage] = useState(null);
-  const nameRef = useRef();
-  const priceRef = useRef();
-  const quantityRef = useRef();
-  const keywordsRef = useRef();
-  const imageRef = useRef();
+  const [productDetails, setProductDetails] = useState({
+    name: "",
+    price: "",
+    quantity: "",
+    keywords: "",
+    image: "",
+  });
+
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isEdit = searchParams.get("edit");
+  const id = searchParams.get("id");
+  const { data, isLoading, isSuccess } = useGetCustomPhoneCoverQuery(id);
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      setProductDetails({
+        name: data?.name || "",
+        quantity: data?.quantity || "",
+        keywords: data?.keywords || "",
+        price: data?.price || "",
+        image: ImageURL + data.imageUrl,
+      });
+    }
+  }, [data, isSuccess]);
   const [errorMessage, setErrorMessage] = useState({});
-  const [
-    uploadImage,
-  ] = useUploadImageMutation();
+  const [uploadImage] = useUploadImageMutation();
   const [addCustomPhoneCover, { isLoading: isLoadingDb }] =
     useAddCustomPhoneCoverMutation();
 
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
-      setImage(URL.createObjectURL(img));
+      setProductDetails((prevState) => ({
+        ...prevState,
+        image: URL.createObjectURL(img),
+      }));
     }
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProductDetails((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const addProduct = async () => {
     try {
-      const [_name, _price, _quantity, _keywords, _image] = [
-        nameRef.current,
-        priceRef.current,
-        quantityRef.current,
-        keywordsRef.current,
-        imageRef.current,
-      ];
-      const { errorField, isFormValid } = checkProductInfoValidate([
-        _name,
-        _price,
-        _quantity,
-        _keywords,
-        _image,
-      ]);
-      console.log(errorField, isFormValid);
+      const { errorField, isFormValid } =
+        checkProductInfoValidate(productDetails);
       setErrorMessage(errorField);
       if (!isFormValid) {
         return;
       }
+
       const formData = new FormData();
-      console.log(imageRef.current.files[0]);
-      formData.append("file", imageRef.current.files[0]);
+      formData.append("file", productDetails.image);
       formData.append("upload_preset", "custom-cover");
+
       const response = await uploadImage({
         endpoint: "image/upload",
         formData,
       });
+      let data = {};
       if (response?.data?.public_id) {
-        const data = {
+        data = {
           imageUrl: response.data.public_id,
-          name: _name.value,
-          price: _price.value,
-          quantity: _quantity.value,
-          keywords: _keywords.value,
+          name: productDetails.name,
+          price: productDetails.price,
+          quantity: productDetails.quantity,
+          keywords: productDetails.keywords,
         };
-        await addCustomPhoneCover({ data: data, id: response.data.public_id });
+      }
+      if (!isEdit) {
+        await addCustomPhoneCover({
+          data: data,
+          id: response.data.public_id,
+        });
 
         toast(<div>Added Phone Cover Successfully</div>);
-        navigate(`/dashboard`);
+      } else {
+        await addCustomPhoneCover({ data: data, id: id });
+
+        toast(<div>Edited Phone Cover Successfully</div>);
       }
+      navigate(`/dashboard`);
     } catch (error) {
       toast(error);
     }
   };
+
+  if (isEdit && isLoading) {
+    return (
+      <div className="w-full h-full">
+        <OrbitProgress color="white" size="small" text="" textColor="" />
+      </div>
+    );
+  }
   return (
     <div className="lg:px-[10%] md:px-[5%] px-[3%] mt-[30px] h-full">
       <h1 className="text-center font-bold text-2xl">Add Cover</h1>
@@ -87,10 +122,11 @@ const NewPhoneCover = () => {
               Product Name<span className="text-red-500">*</span>
             </Label>
             <Input
-              ref={nameRef}
+              value={productDetails.name}
               type="text"
               name="name"
               placeholder="product Name"
+              onChange={handleChange}
               className="focus-visible:ring-1 focus-visible:ring-input-outline p-4  border-1 border-input-border"
             />
             {errorMessage.name && (
@@ -104,10 +140,11 @@ const NewPhoneCover = () => {
               Quantity<span className="text-red-500">*</span>
             </Label>
             <Input
-              ref={quantityRef}
+              value={productDetails.quantity}
               type="number"
               name="quantity"
               placeholder="quantity"
+              onChange={handleChange}
               className="focus-visible:ring-1 focus-visible:ring-input-outline p-4  border-1 border-input-border"
             />
             {errorMessage.quantity && (
@@ -121,10 +158,11 @@ const NewPhoneCover = () => {
               Keywords<span className="text-red-500">*</span>
             </Label>
             <Input
-              ref={keywordsRef}
+              value={productDetails.keywords}
               type="text"
               name="keywords"
               placeholder="keywords"
+              onChange={handleChange}
               className="focus-visible:ring-1 focus-visible:ring-input-outline p-4  border-1 border-input-border"
             />
             {errorMessage.keywords && (
@@ -138,10 +176,11 @@ const NewPhoneCover = () => {
               Price<span className="text-red-500">*</span>
             </Label>
             <Input
-              ref={priceRef}
+              value={productDetails.price}
               type="number"
               name="price"
               placeholder="price"
+              onChange={handleChange}
               className="focus-visible:ring-1 focus-visible:ring-input-outline p-4  border-1 border-input-border"
             />
             {errorMessage.price && (
@@ -151,12 +190,13 @@ const NewPhoneCover = () => {
             )}
           </div>
           <div className="mb-3.5">
-            {image && <img className="w-[100px] h-[150px]" src={image} />}
+            {productDetails.image && (
+              <img className="w-[100px] h-[150px]" src={productDetails.image} />
+            )}
             <Label htmlFor="email" className="pb-1.5 text-label-foreground">
               Select File<span className="text-red-500">*</span>
             </Label>
             <input
-              ref={imageRef}
               type="file"
               name="image"
               onChange={onImageChange}

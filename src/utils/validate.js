@@ -41,37 +41,35 @@ const isPasswordValid = (password) =>
 
 const isNameValid = (name) => /^[A-Za-z' -]+$/.test(name);
 
-const isNumberValid = (number) =>  /^-?\d+$/.test(number)
+const isNumberValid = (number) => /^-?\d+$/.test(number);
 
 export const checkProductInfoValidate = (formData) => {
   let isFormValid = true;
   const errorField = {};
-  formData.forEach((field) => {
-    console.log(field)
-    const {type, value, name} = field
-    switch(type) {
-      case 'text' : 
-      if (!isNameValid(value)) {
-        errorField[name] = `Invalid ${name}!`;
-        isFormValid = false;
-      }
-      break
-      case 'number' :
-        if (!isNumberValid(value)) {
-          errorField[name] = `Invalid ${name}!`;
+  const keys = Object.keys(formData);
+  keys.forEach((key) => {
+    const value = formData[key];
+    switch (true) {
+      case key === "keywords" || key === "name":
+        if (!isNameValid(value)) {
+          errorField[key] = `Invalid ${key}!`;
           isFormValid = false;
         }
         break;
-      
-      case 'file' : 
-      console.log(field.files.length)
-      if (!field.files.length) {
-        errorField[name] = `Add ${name}!`;
-        isFormValid = false;
-      }
-      break;
-    }
-  })
-  return { errorField, isFormValid };
+      case key === "qunatity" || key === "price":
+        if (!isNumberValid(value)) {
+          errorField[key] = `Invalid ${key}!`;
+          isFormValid = false;
+        }
+        break;
 
-}
+      case key === "image":
+        if (!value?.length) {
+          errorField[key] = `Add ${key}!`;
+          isFormValid = false;
+        }
+        break;
+    }
+  });
+  return { errorField, isFormValid };
+};

@@ -62,3 +62,6 @@ export const mobileListConfig = [
   { value: "iPhone 11" },
   { value: "iPhone 12" },
 ];
+
+
+export const ImageURL = `https://res.cloudinary.com/do2lx5yjd/image/upload/`;
