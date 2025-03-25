@@ -1,16 +1,22 @@
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { db } from "@/utils/firebase";
-import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
-
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
 
 const dbName = "PhoneCases";
 export const phoneApi = createApi({
   reducerPath: "phoneApi",
   baseQuery: fakeBaseQuery(),
+  tagTypes: ["PhoneCovers"], 
   endpoints: (build) => ({
     addCustomPhoneCover: build.mutation({
       queryFn: async ({ data, id }) => {
-        console.log("here");
         try {
           const docRef = doc(db, dbName, id);
           await setDoc(docRef, data);
@@ -57,7 +63,7 @@ export const phoneApi = createApi({
             id: doc.id,
             ...doc.data(),
           }));
-      
+
           return { data: dataArray };
         } catch (error) {
           return {
@@ -68,10 +74,31 @@ export const phoneApi = createApi({
           };
         }
       },
+      providesTags: ["PhoneCovers"]
     }),
-    
+    deletePhoneCover: build.mutation({
+      queryFn: async (id) => {
+        try {
+          const docRef = doc(db, dbName, id);
+          await deleteDoc(docRef);
+          return { data: "deleted" };
+        } catch (error) {
+          return {
+            error: {
+              status: 500,
+              message: error.message,
+            },
+          };
+        }
+      },
+      invalidatesTags:["PhoneCovers"]
+    }),
   }),
 });
-console.log(phoneApi);
-export const { useAddCustomPhoneCoverMutation, useGetCustomPhoneCoverQuery, useGetAllPhoneCoversQuery } =
-  phoneApi;
+
+export const {
+  useAddCustomPhoneCoverMutation,
+  useGetCustomPhoneCoverQuery,
+  useGetAllPhoneCoversQuery,
+  useDeletePhoneCoverMutation
+} = phoneApi;

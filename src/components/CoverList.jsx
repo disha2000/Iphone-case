@@ -1,15 +1,13 @@
 import { OrbitProgress } from "react-loading-indicators";
 import { useGetAllPhoneCoversQuery } from "../store/services/PhoneApi";
 import { useEffect } from "react";
-import { Button } from "./ui/button";
-import { Link } from "react-router-dom";
-import { ImageURL } from "@/utils/config";
+import CoverItem from "./CoverItem";
 
 const CoverList = () => {
   const { data, error, isLoading, refetch } = useGetAllPhoneCoversQuery();
   useEffect(() => {
     refetch();
-  }, []);
+  }, [data]);
   if (isLoading) {
     return (
       <div className="w-full h-full">
@@ -37,36 +35,7 @@ const CoverList = () => {
           </thead>
           <tbody>
             {data.map((item, index) => {
-              return (
-                <tr key={item.id}>
-                  <td className="border-b-1 border-gray-200 text-center">
-                    {index + 1}
-                  </td>
-                  <td className="border-b-1 border-gray-200 flex flex-col items-center py-2">
-                    <img
-                      src={`${ImageURL}${item.imageUrl}`}
-                      className="h-[100px] w-[50px]"
-                    />
-                  </td>
-                  <td className="border-b-1 border-gray-200 text-center">
-                    <h1 className="font-normal">{item.name}</h1>
-                  </td>
-                  <td className="border-b-1 border-gray-200 text-center">
-                    <p className="font-normal">${item.price}</p>
-                  </td>
-                  <td className="border-b-1 border-gray-200 text-center">
-                    <p className="font-normal">${item.quantity}</p>
-                  </td>
-                  <td className="border-b-1 border-gray-200 text-center">
-                    <Link
-                      to={`/dashboard/newphonecover?edit=true&id=${item.id}`}
-                    >
-                      <Button className="mr-1.5 cursor-pointer">Edit</Button>
-                    </Link>
-                    <Button>Delete</Button>
-                  </td>
-                </tr>
-              );
+              return <CoverItem item={item} index={index} key={item.id} />;
             })}
           </tbody>
         </table>

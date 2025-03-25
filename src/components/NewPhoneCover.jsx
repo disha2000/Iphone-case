@@ -68,7 +68,6 @@ const NewPhoneCover = () => {
       if (!isFormValid) {
         return;
       }
-
       const formData = new FormData();
       formData.append("file", productDetails.image);
       formData.append("upload_preset", "custom-cover");
