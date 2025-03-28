@@ -28,7 +28,6 @@ const NewPhoneCover = () => {
   const isEdit = searchParams.get("edit");
   const id = searchParams.get("id");
   const { data, isLoading, isSuccess } = useGetCustomPhoneCoverQuery(id);
-  console.log(useGetCustomPhoneCoverQuery(id))
 
   useEffect(() => {
     if (isSuccess && data) {
@@ -101,7 +100,6 @@ const NewPhoneCover = () => {
 
         toast(<div>Added Phone Cover Successfully</div>);
       } else {
-        console.log({ data, id })
         await addCustomPhoneCover({ data, id });
 
         toast(<div>Edited Phone Cover Successfully</div>);

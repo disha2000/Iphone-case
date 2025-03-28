@@ -10,13 +10,11 @@ const ProtectedRoute = ({checkIsAdmin = false}) => {
   }
   if (checkIsAdmin) {
     const isAdmin = user?.email === import.meta.env.VITE_ADMIN_EMAIL;
-    console.log(user && isAdmin)
     protectedConditions = user && isAdmin;
   }
   if (!protectedConditions && checkIsAdmin) {
     return  <Navigate to="/unauthorized" />
   }
-  console.log(protectedConditions)
   return protectedConditions ? <Outlet /> : <Navigate to="/login" state={{from:location}} replace/>;
 };
 export default ProtectedRoute;

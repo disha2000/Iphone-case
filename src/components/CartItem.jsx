@@ -12,7 +12,6 @@ import { useEffect } from "react";
 
 const CartItem = ({ cart }) => {
   const { imageUrl, model, price, finish, material, id, quantity } = cart;
-  console.log(quantity);
   const dispatch = useDispatch();
   const phoneCaseImage = `https://res.cloudinary.com/do2lx5yjd/image/upload/${imageUrl}`;
   const modelName = mobileListConfig[model]?.value || "iPhone";
@@ -23,7 +22,6 @@ const CartItem = ({ cart }) => {
   };
   useEffect(() => {
     if (quantity == 0) {
-      console.log("here");
       removeItemFromCart();
     }
   }, [cart.quantity]);

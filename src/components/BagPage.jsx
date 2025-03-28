@@ -3,7 +3,6 @@ import CartItems from "./CartItems";
 import PriceSection from "./PriceSection";
 const BagPage = () => {
   const [carts] = useOutletContext();
-  console.log(carts);
   return (
     <div>
       <h1 className="font-bold text-lg"> My bag ({carts?.length} items)</h1>

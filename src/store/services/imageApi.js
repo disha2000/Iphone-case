@@ -31,5 +31,4 @@ export const imageApi = createApi({
     }),
   });
 
-console.log(imageApi)
 export const {useUploadImageMutation} = imageApi

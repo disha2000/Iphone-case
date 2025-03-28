@@ -82,7 +82,6 @@ const CustomizeCoverDesign = () => {
       const phoneElement = phoneRef.current;
 
       if (!phoneElement) {
-        console.error("Phone container not found!");
         return;
       }
 

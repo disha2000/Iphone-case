@@ -3,8 +3,6 @@ import { useSelector } from "react-redux";
 const PublicRoute = () => {
   const user = useSelector((store) => store.user.user);
   const isAdmin = user?.email === import.meta.env.VITE_ADMIN_EMAIL;
-  console.log(user)
-  console.log(isAdmin)
   if (isAdmin) {
     return <Navigate to="/dashboard" replace />;
   }
