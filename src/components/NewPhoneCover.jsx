@@ -11,6 +11,8 @@ import { OrbitProgress } from "react-loading-indicators";
 import { useGetCustomPhoneCoverQuery } from "../store/services/PhoneApi";
 import { useSearchParams } from "react-router-dom";
 import { ImageURL } from "@/utils/config";
+import { convertBlobUrlToFile } from "@/utils/helpers";
+
 
 const NewPhoneCover = () => {
   const [productDetails, setProductDetails] = useState({
@@ -26,6 +28,7 @@ const NewPhoneCover = () => {
   const isEdit = searchParams.get("edit");
   const id = searchParams.get("id");
   const { data, isLoading, isSuccess } = useGetCustomPhoneCoverQuery(id);
+  console.log(useGetCustomPhoneCoverQuery(id))
 
   useEffect(() => {
     if (isSuccess && data) {
@@ -69,7 +72,11 @@ const NewPhoneCover = () => {
         return;
       }
       const formData = new FormData();
-      formData.append("file", productDetails.image);
+      const imageFile = await convertBlobUrlToFile(
+        productDetails.image,
+        "uploaded-image.png"
+      );
+      formData.append("file", imageFile);
       formData.append("upload_preset", "custom-cover");
 
       const response = await uploadImage({
@@ -94,7 +101,8 @@ const NewPhoneCover = () => {
 
         toast(<div>Added Phone Cover Successfully</div>);
       } else {
-        await addCustomPhoneCover({ data: data, id: id });
+        console.log({ data, id })
+        await addCustomPhoneCover({ data, id });
 
         toast(<div>Edited Phone Cover Successfully</div>);
       }
@@ -190,7 +198,7 @@ const NewPhoneCover = () => {
           </div>
           <div className="mb-3.5">
             {productDetails.image && (
-              <img className="w-[100px] h-[150px]" src={productDetails.image} />
+              <img className="w-[90px] h-[150px]" src={productDetails.image} />
             )}
             <Label htmlFor="email" className="pb-1.5 text-label-foreground">
               Select File<span className="text-red-500">*</span>
@@ -210,11 +218,12 @@ const NewPhoneCover = () => {
           <Button
             className="bg-button-background hover:bg-button-background-hover cursor-pointer"
             onClick={addProduct}
+            disabled={isLoading}
           >
             {isLoadingDb && (
               <OrbitProgress color="white" size="small" text="" textColor="" />
             )}
-            Add Cover +
+            {!isEdit ? "Add Cover +" : "Edit Cover"}
           </Button>
         </div>
       </div>

@@ -40,6 +40,7 @@ const isPasswordValid = (password) =>
   );
 
 const isNameValid = (name) => /^[A-Za-z' -]+$/.test(name);
+const isTextValid = (name) => /^[A-Za-z0-9' -]+$/.test(name);
 
 const isNumberValid = (number) => /^-?\d+$/.test(number);
 
@@ -51,7 +52,7 @@ export const checkProductInfoValidate = (formData) => {
     const value = formData[key];
     switch (true) {
       case key === "keywords" || key === "name":
-        if (!isNameValid(value)) {
+        if (!isTextValid(value)) {
           errorField[key] = `Invalid ${key}!`;
           isFormValid = false;
         }

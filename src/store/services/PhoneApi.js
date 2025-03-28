@@ -6,28 +6,36 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   setDoc,
+  limit,
+  startAfter,
+  orderBy,
 } from "firebase/firestore";
 
 const dbName = "PhoneCases";
+const PAGE_SIZE = 5;
 export const phoneApi = createApi({
   reducerPath: "phoneApi",
   baseQuery: fakeBaseQuery(),
-  tagTypes: ["PhoneCovers"], 
+  tagTypes: ["PhoneCovers", "getSingleCover"],
   endpoints: (build) => ({
     addCustomPhoneCover: build.mutation({
       queryFn: async ({ data, id }) => {
         try {
           const docRef = doc(db, dbName, id);
-          await setDoc(docRef, data);
+          await setDoc(docRef, {
+            ...data,
+            createdAt: Math.floor(new Date().getTime() / 1000),
+          });
 
           return { data: "Success!!! Phone cover added" };
         } catch (error) {
           return { error: { status: "ERROR", message: error.message } };
         }
       },
+      invalidatesTags: ["PhoneCovers", "getSingleCover"],
     }),
-    addManualPhoneCover: build.mutation({}),
     getCustomPhoneCover: build.query({
       queryFn: async (id) => {
         try {
@@ -42,7 +50,7 @@ export const phoneApi = createApi({
             };
           }
           return {
-            data: docSnap.data(),
+            data: { ...docSnap.data() },
           };
         } catch (error) {
           return {
@@ -53,28 +61,43 @@ export const phoneApi = createApi({
           };
         }
       },
+      providesTags: ["getSingleCover"],
     }),
     getAllPhoneCovers: build.query({
-      queryFn: async () => {
+      queryFn: async (lastDoc) => {
         try {
-          const querySnapshot = await getDocs(collection(db, dbName));
-
+          let q = query(
+            collection(db, dbName),
+            orderBy("createdAt", "desc"),
+            limit(PAGE_SIZE)
+          );
+          if (lastDoc) {
+            q = query(
+              collection(db, dbName),
+              orderBy("createdAt", "desc"),
+              startAfter(lastDoc),
+              limit(PAGE_SIZE)
+            );
+          }
+          const querySnapshot = await getDocs(q);
           const dataArray = querySnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
           }));
-
-          return { data: dataArray };
-        } catch (error) {
           return {
-            error: {
-              status: 500,
-              message: error.message,
+            data: {
+              covers: dataArray,
+              lastDoc:
+                dataArray.length > 0
+                  ? dataArray[dataArray.length - 1].createdAt
+                  : null,
             },
           };
+        } catch (error) {
+          return { error: { status: 500, message: error.message } };
         }
       },
-      providesTags: ["PhoneCovers"]
+      providesTags: ["PhoneCovers"],
     }),
     deletePhoneCover: build.mutation({
       queryFn: async (id) => {
@@ -91,7 +114,7 @@ export const phoneApi = createApi({
           };
         }
       },
-      invalidatesTags:["PhoneCovers"]
+      invalidatesTags: ["PhoneCovers"],
     }),
   }),
 });
@@ -100,5 +123,5 @@ export const {
   useAddCustomPhoneCoverMutation,
   useGetCustomPhoneCoverQuery,
   useGetAllPhoneCoversQuery,
-  useDeletePhoneCoverMutation
+  useDeletePhoneCoverMutation,
 } = phoneApi;
