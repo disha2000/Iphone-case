@@ -2,13 +2,13 @@ import { useGetAllPhoneCoversQuery } from "../store/services/PhoneApi";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { sortOptions } from "@/utils/config";
 
-const useInfiniteScroll = (id, pageSize) => {
+const useInfiniteScroll = (id, pageSize, filterOptions) => {
   const [lastDoc, setLastDoc] = useState(null);
   const [covers, setCovers] = useState([]);
   const observerRef = useRef(null);
 
   const { data, error, isLoading, isSuccess, refetch } =
-    useGetAllPhoneCoversQuery({ lastDoc, sortObj: sortOptions[id], page_size:pageSize});
+    useGetAllPhoneCoversQuery({ lastDoc, sortObj: sortOptions[id], page_size:pageSize, filterOptions});
 
   useEffect(() => {
     setLastDoc(null);

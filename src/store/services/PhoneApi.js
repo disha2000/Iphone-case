@@ -11,10 +11,10 @@ import {
   limit,
   startAfter,
   orderBy,
+  where,
 } from "firebase/firestore";
 
 const dbName = "PhoneCases";
-const PAGE_SIZE = 5;
 export const phoneApi = createApi({
   reducerPath: "phoneApi",
   baseQuery: fakeBaseQuery(),
@@ -64,13 +64,17 @@ export const phoneApi = createApi({
       providesTags: ["getSingleCover"],
     }),
     getAllPhoneCovers: build.query({
-      queryFn: async ({lastDoc, sortObj, page_size}) => {
+      queryFn: async ({ lastDoc, sortObj, page_size, filterOptions }) => {
         try {
           let q = query(
             collection(db, dbName),
             orderBy(sortObj.field, sortObj.order),
             limit(page_size)
           );
+          if (filterOptions.isInStockCheck) {
+            q = query(q, where("quantity", ">", 0));
+          }
+
           if (lastDoc) {
             q = query(
               collection(db, dbName),
@@ -79,6 +83,9 @@ export const phoneApi = createApi({
               limit(page_size)
             );
           }
+          console.log(q)
+
+         
           const querySnapshot = await getDocs(q);
           const dataArray = querySnapshot.docs.map((doc) => ({
             id: doc.id,
@@ -88,9 +95,7 @@ export const phoneApi = createApi({
             data: {
               covers: dataArray,
               lastDoc:
-                dataArray.length > 0
-                  ? dataArray[dataArray.length - 1]
-                  : null,
+                dataArray.length > 0 ? dataArray[dataArray.length - 1] : null,
             },
           };
         } catch (error) {
