@@ -24,6 +24,7 @@ import NewPhoneCover from "./components/NewPhoneCover";
 import PublicRoute from "./components/routes/PublicRoute";
 import CoverList from "./components/CoverList";
 import PhoneCases from "./components/PhoneCases";
+import PhoneCoverPreview from "./PhoneCoverPreview";
 
 const routerConfig = createBrowserRouter([
   {
@@ -37,7 +38,11 @@ const routerConfig = createBrowserRouter([
       },
       {
         path: "/phonecases",
-        element:<PhoneCases/>
+        element:<PhoneCases/>,
+      },
+      {
+        path: "/phonecases/preview/:id",
+        element: <PhoneCoverPreview/>
       },
       {
         path: "/dashboard",

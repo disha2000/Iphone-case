@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 
 const AddToCart = ({ data = {}, id }) => {
   const { finish, material, imageUrl, model, price, isCustom, name } = data;
-  console.log(data);
   const dispatch = useDispatch();
   const carts = useSelector((store) => store.cart.carts);
   const existedCartItem = useMemo(() => {
