@@ -71,9 +71,6 @@ export const phoneApi = createApi({
             orderBy(sortObj.field, sortObj.order),
             limit(page_size)
           );
-          if (filterOptions.isInStockCheck) {
-            q = query(q, where("quantity", ">", 0));
-          }
 
           if (lastDoc) {
             q = query(
@@ -83,9 +80,9 @@ export const phoneApi = createApi({
               limit(page_size)
             );
           }
-          console.log(q)
-
-         
+          if (filterOptions.isInStockCheck) {
+            q = query(q, where("quantity", ">", 0));
+          }
           const querySnapshot = await getDocs(q);
           const dataArray = querySnapshot.docs.map((doc) => ({
             id: doc.id,
