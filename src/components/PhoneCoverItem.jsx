@@ -13,8 +13,8 @@ const PhoneCoverItem = ({ cover, mref, disabled }) => {
     <div
       key={id}
       ref={mref}
-      className={`md:w-[150px] md:h-[300px] flex flex-col m-auto text-center cursor-pointer ${
-        disabled ? "bg-gray-50 cursor-none" : ""
+      className={`md:w-[200px] md:h-[300px] flex flex-col m-auto text-center cursor-pointer ${
+        disabled ? "bg-gray-50 !cursor-none" : ""
       }`}
       onClick={navigateToPhoneReview}
     >
