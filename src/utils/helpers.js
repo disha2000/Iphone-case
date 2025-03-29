@@ -4,3 +4,9 @@ export const convertBlobUrlToFile = async (blobUrl, fileName) => {
     return new File([blob], fileName, { type: blob.type });
   };
   
+export const totalCartItemCount = (carts) => {
+  const cartItemCount = carts.reduce((totalCount, cart) => {
+    return totalCount + cart.quantity;
+  }, 0)
+  return cartItemCount
+}

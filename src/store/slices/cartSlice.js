@@ -9,10 +9,11 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action) => {
+      console.log(action.payload)
       state.carts.push(action.payload);
     },
     updateCart: (state, action) => {
-        const { id, quantity } = action.payload;
+        const { id, quantity} = action.payload;
         const cartItem = state.carts.find((cart) => cart.id === id);
         if (cartItem) {
           cartItem.quantity = quantity;

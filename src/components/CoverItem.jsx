@@ -14,7 +14,7 @@ const CoverItem = ({ item, index, mref }) => {
       <td className="p-3">
         <img
           src={`${ImageURL}${item.imageUrl}`}
-          className="h-[100px] w-[50px] object-cover rounded-md shadow-md"
+          className="h-[100px] w-[50px] object-cover"
         />
       </td>
       <td className="p-3">

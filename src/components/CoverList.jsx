@@ -1,41 +1,9 @@
 import { OrbitProgress } from "react-loading-indicators";
-import { useGetAllPhoneCoversQuery } from "../store/services/PhoneApi";
-import { useCallback, useEffect, useRef, useState } from "react";
 import CoverItem from "./CoverItem";
+import useInfiniteScroll from "@/customhooks/useInfiniteScroll";
 
 const CoverList = () => {
-  const [lastDoc, setLastDoc] = useState(null)
-  const [covers, setCovers] = useState([])
-  const { data, error, isLoading, isSuccess, refetch } =
-    useGetAllPhoneCoversQuery(lastDoc);
-  const observerRef = useRef(null);
- 
-  useEffect(() => {
-    if (isSuccess && data?.covers?.length) {  
-      setCovers((prevData) => {
-        const mergedData = [...prevData, ...data.covers];
-        return Array.from(new Map(mergedData.map((item) => [item.id, item])).values());
-      });
-      setLastDoc((prevLastDoc) => (prevLastDoc?.id !== data.lastDoc?.id ? data.lastDoc : prevLastDoc));
-    }
-  }, [isSuccess, data?.covers]); 
-
-  const lastElementRef = useCallback((node) => {
-    if (isLoading) return;
-  
-    if (observerRef.current) observerRef.current.disconnect();
-  
-    observerRef.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {  
-        if (data?.lastDoc) {
-          setLastDoc(data.lastDoc); 
-        }
-        refetch();
-      }
-    });
-    if (node) observerRef.current.observe(node);
-  }, [data?.lastDoc]);
-  
+  const [lastElementRef, covers, isLoading, error] = useInfiniteScroll();
   if (isLoading) {
     return (
       <div className="w-full h-screen">

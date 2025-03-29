@@ -23,6 +23,7 @@ import PaymentPage from "./components/PaymentPage";
 import NewPhoneCover from "./components/NewPhoneCover";
 import PublicRoute from "./components/routes/PublicRoute";
 import CoverList from "./components/CoverList";
+import PhoneCases from "./components/PhoneCases";
 
 const routerConfig = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const routerConfig = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/phonecases",
+        element:<PhoneCases/>
       },
       {
         path: "/dashboard",

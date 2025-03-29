@@ -4,7 +4,8 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
 const AddToCart = ({ data = {}, id }) => {
-  const { finish, material, imageUrl, model, price } = data;
+  const { finish, material, imageUrl, model, price, isCustom, name } = data;
+  console.log(data);
   const dispatch = useDispatch();
   const carts = useSelector((store) => store.cart.carts);
   const existedCartItem = useMemo(() => {
@@ -17,12 +18,14 @@ const AddToCart = ({ data = {}, id }) => {
     const dispatchRequest = () => {
       const updatedConfig = {
         id: id,
+        name: name,
         quantity: count,
         model: model,
         price: price,
         imageUrl: imageUrl,
         material: material,
-        finish: finish
+        finish: finish,
+        isCustom: isCustom,
       };
       if (!existedCartItem) {
         dispatch(addToCart(updatedConfig));
@@ -42,13 +45,13 @@ const AddToCart = ({ data = {}, id }) => {
     setCount((prev) => prev - 1);
   };
   return (
-    <div className=" rounded-lg w-[120px] h-[35px] float-end text-sm bg-white flex flex-row items-center cursor-pointer text-black border-1 border-gray-300">
+    <div className=" rounded-md w-[120px] h-[35px] float-end text-sm bg-white flex flex-row items-center cursor-pointer text-black border-1 border-gray-300">
       {count === 0 ? (
         <div
           className="w-full h-full  py-2 flex flex-row justify-center items-center cursor-pointer"
           onClick={handleIncrement}
         >
-          Add To Cart
+          ADD TO CART
         </div>
       ) : (
         <div className="grid grid-cols-3 h-full w-full text-center items-center">

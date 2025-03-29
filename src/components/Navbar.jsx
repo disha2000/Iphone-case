@@ -2,10 +2,10 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useSignoutMutation } from "../store/services/auth";
 import { persistor } from "../store/appStore";
-import { Button } from "@/components/ui/button";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { totalCartItemCount } from "@/utils/helpers";
 
 const Navbar = () => {
   const user = useSelector((store) => store.user.user);
@@ -28,6 +28,7 @@ const Navbar = () => {
     });
     navigate("/");
   };
+  const totalCartItems = totalCartItemCount(carts)
   return (
     <nav className="h-14 bg-white/10 border-b-1 border-gray-200 backdrop-blur-3xl fixed w-full flex items-center px-[5%] justify-between z-[100] ">
       <h1 className="text-xl font-semibold">
@@ -38,6 +39,18 @@ const Navbar = () => {
       <ul className="text-sm font-medium flex h-full items-center justify-between">
         {!isCart ? (
           <>
+            {!isAdmin && (
+              <>
+                <li className="pr-3">
+                  <Link to="/phonecases">Phone cases</Link>
+                </li>
+                <li className="pr-3">
+                  <Link to="/configure">
+                      Create Case
+                  </Link>
+                </li>
+              </>
+            )}
             {!user && (
               <>
                 <li className="inline-block pr-3">
@@ -56,7 +69,7 @@ const Navbar = () => {
 
             {!isAdmin && (
               <li className="inline-block px-3">
-                <Link to="/cart">Cart ({carts?.length})</Link>
+                <Link to="/cart">Cart ({totalCartItems})</Link>
               </li>
             )}
             {user && (
@@ -67,20 +80,6 @@ const Navbar = () => {
                 >
                   SignOut
                 </button>
-              </li>
-            )}
-
-            {!isAdmin && (
-              <li className=" h-8 w-px bg-gray-300 inline-block mx-2"></li>
-            )}
-
-            {!isAdmin && (
-              <li>
-                <Link to="/configure">
-                  <Button className="bg-button-background hover:bg-button-background-hover w-full cursor-pointer">
-                    Create Case
-                  </Button>
-                </Link>
               </li>
             )}
           </>
