@@ -64,19 +64,19 @@ export const phoneApi = createApi({
       providesTags: ["getSingleCover"],
     }),
     getAllPhoneCovers: build.query({
-      queryFn: async (lastDoc) => {
+      queryFn: async ({lastDoc, sortObj, page_size}) => {
         try {
           let q = query(
             collection(db, dbName),
-            orderBy("createdAt", "desc"),
-            limit(PAGE_SIZE)
+            orderBy(sortObj.field, sortObj.order),
+            limit(page_size)
           );
           if (lastDoc) {
             q = query(
               collection(db, dbName),
-              orderBy("createdAt", "desc"),
-              startAfter(lastDoc),
-              limit(PAGE_SIZE)
+              orderBy(sortObj.field, sortObj.order),
+              startAfter(lastDoc[sortObj.field]),
+              limit(page_size)
             );
           }
           const querySnapshot = await getDocs(q);
@@ -89,7 +89,7 @@ export const phoneApi = createApi({
               covers: dataArray,
               lastDoc:
                 dataArray.length > 0
-                  ? dataArray[dataArray.length - 1].createdAt
+                  ? dataArray[dataArray.length - 1]
                   : null,
             },
           };

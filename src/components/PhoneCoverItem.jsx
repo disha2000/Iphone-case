@@ -2,7 +2,7 @@ import { ImageURL } from "@/utils/config";
 import AddToCart from "./common/AddToCart";
 import { useNavigate } from "react-router-dom";
 
-const PhoneCoverItem = ({ cover, mref }) => {
+const PhoneCoverItem = ({ cover, mref, disabled }) => {
   const { imageUrl, id, name, price } = cover;
   const navigate = useNavigate();
 
@@ -13,7 +13,9 @@ const PhoneCoverItem = ({ cover, mref }) => {
     <div
       key={id}
       ref={mref}
-      className="md:w-[150px] md:h-[300px] flex flex-col m-auto text-center cursor-pointer"
+      className={`md:w-[150px] md:h-[300px] flex flex-col m-auto text-center cursor-pointer ${
+        disabled ? "bg-gray-50 cursor-none" : ""
+      }`}
       onClick={navigateToPhoneReview}
     >
       <img
@@ -29,4 +31,20 @@ const PhoneCoverItem = ({ cover, mref }) => {
     </div>
   );
 };
+
+export const outOfOrderPhoneCase = (Component) => {
+  console.log("here");
+  return function WrappedComponent(props) {
+    console.log("here1");
+    return (
+      <div className="relative">
+        <p className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-1 text-indigo-500 border border-gray-300 font-normal">
+          OUT OF STOCK
+        </p>
+        <Component {...props} disabled={true} />
+      </div>
+    );
+  };
+};
+
 export default PhoneCoverItem;

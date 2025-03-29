@@ -3,7 +3,7 @@ import CoverItem from "./CoverItem";
 import useInfiniteScroll from "@/customhooks/useInfiniteScroll";
 
 const CoverList = () => {
-  const [lastElementRef, covers, isLoading, error] = useInfiniteScroll();
+  const [lastElementRef, covers, isLoading, error] = useInfiniteScroll(0, 10);
   if (isLoading) {
     return (
       <div className="w-full h-screen">

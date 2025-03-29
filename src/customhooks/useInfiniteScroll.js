@@ -1,44 +1,48 @@
 import { useGetAllPhoneCoversQuery } from "../store/services/PhoneApi";
 import { useState, useCallback, useRef, useEffect } from "react";
+import { sortOptions } from "@/utils/config";
 
-const useInfiniteScroll = () => {
+const useInfiniteScroll = (id, pageSize) => {
   const [lastDoc, setLastDoc] = useState(null);
   const [covers, setCovers] = useState([]);
-  const { data, error, isLoading, isSuccess, refetch } =
-    useGetAllPhoneCoversQuery(lastDoc);
   const observerRef = useRef(null);
+
+  const { data, error, isLoading, isSuccess, refetch } =
+    useGetAllPhoneCoversQuery({ lastDoc, sortObj: sortOptions[id], page_size:pageSize});
+
+  useEffect(() => {
+    setLastDoc(null);
+    setCovers([]);
+  }, [id]);
 
   useEffect(() => {
     if (isSuccess && data?.covers?.length) {
       setCovers((prevData) => {
         const mergedData = [...prevData, ...data.covers];
-        return Array.from(
-          new Map(mergedData.map((item) => [item.id, item])).values()
-        );
+        return Array.from(new Map(mergedData.map((item) => [item.id, item])).values());
       });
+
       setLastDoc((prevLastDoc) =>
         prevLastDoc?.id !== data.lastDoc?.id ? data.lastDoc : prevLastDoc
       );
     }
-  }, [isSuccess, data?.covers]);
+  }, [isSuccess, data?.lastDoc]);
 
   const lastElementRef = useCallback(
     (node) => {
-      if (isLoading) return;
+      if (isLoading || !data?.lastDoc) return;
 
       if (observerRef.current) observerRef.current.disconnect();
 
       observerRef.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          if (data?.lastDoc) {
-            setLastDoc(data.lastDoc);
-          }
           refetch();
         }
       });
+
       if (node) observerRef.current.observe(node);
     },
-    [data?.lastDoc]
+    [data?.lastDoc, isLoading]
   );
 
   return [lastElementRef, covers, isLoading, error];

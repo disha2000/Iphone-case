@@ -64,3 +64,31 @@ export const mobileListConfig = [
 ];
 
 export const ImageURL = `https://res.cloudinary.com/do2lx5yjd/image/upload/`;
+
+
+export const sortOptions = [
+  {
+    id: 0,
+    name: "Default Sorting",
+    field: "createdAt",
+    order: "asc",
+  },
+  {
+    id: 1,
+    name: "Sort by price: low to High",
+    field: "price",
+    order: "asc",
+  },
+  {
+    id: 2,
+    name: "Sort by price: high to low",
+    field: "price",
+    order: "desc",
+  },
+  {
+    id: 3,
+    name: "Latest",
+    field: "createdAt",
+    order: "desc",
+  },
+];
