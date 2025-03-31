@@ -66,23 +66,24 @@ export const phoneApi = createApi({
     getAllPhoneCovers: build.query({
       queryFn: async ({ lastDoc, sortObj, page_size, filterOptions }) => {
         try {
-          let q = query(
-            collection(db, dbName),
+          let q = query(collection(db, dbName));
+
+          if (filterOptions) {
+            q = query(q, where("quantity", ">", 0));
+          }
+
+          q = query(
+            q,
             orderBy(sortObj.field, sortObj.order),
-            limit(page_size)
+            orderBy("quantity")
           );
 
           if (lastDoc) {
-            q = query(
-              collection(db, dbName),
-              orderBy(sortObj.field, sortObj.order),
-              startAfter(lastDoc[sortObj.field]),
-              limit(page_size)
-            );
+            q = query(q, startAfter(lastDoc[sortObj.field], lastDoc.quantity));
           }
-          if (filterOptions.isInStockCheck) {
-            q = query(q, where("quantity", ">", 0));
-          }
+
+          q = query(q, limit(page_size));
+
           const querySnapshot = await getDocs(q);
           const dataArray = querySnapshot.docs.map((doc) => ({
             id: doc.id,

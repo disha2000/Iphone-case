@@ -1,9 +1,20 @@
 import { OrbitProgress } from "react-loading-indicators";
 import CoverItem from "./CoverItem";
 import useInfiniteScroll from "@/customhooks/useInfiniteScroll";
+import { useContext } from "react";
+import sortContext from "./context/sortContext";
+import { filterContext } from "./context/filterContext";
 
 const CoverList = () => {
-  const [lastElementRef, covers, isLoading, error] = useInfiniteScroll(0, 10);
+  const { sortIndex } = useContext(sortContext);
+  const { isOutOfStockCheck } = useContext(filterContext);
+  const [lastElementRef, covers, isLoading, error] = useInfiniteScroll(
+    sortIndex,
+    15,
+    {
+      isInStockCheck: isOutOfStockCheck,
+    }
+  );
   if (isLoading) {
     return (
       <div className="w-full h-screen">

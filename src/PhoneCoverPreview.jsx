@@ -28,7 +28,6 @@ const PhoneCoverPreview = () => {
   if (error) {
     return <div>{error.message}</div>;
   }
-  console.log(data);
   return (
     <WrappedContainer className="mt-[58px] lg:px-[10%] md:px-[5%] px-[3%] gap-x-2">
       {data && (

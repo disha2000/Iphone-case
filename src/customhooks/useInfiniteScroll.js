@@ -6,14 +6,13 @@ const useInfiniteScroll = (id, pageSize, filterOptions) => {
   const [lastDoc, setLastDoc] = useState(null);
   const [covers, setCovers] = useState([]);
   const observerRef = useRef(null);
-
   const { data, error, isLoading, isSuccess, refetch } =
     useGetAllPhoneCoversQuery({ lastDoc, sortObj: sortOptions[id], page_size:pageSize, filterOptions});
 
   useEffect(() => {
     setLastDoc(null);
     setCovers([]);
-  }, [id]);
+  }, [id, filterOptions]);
 
   useEffect(() => {
     if (isSuccess && data?.covers?.length) {
