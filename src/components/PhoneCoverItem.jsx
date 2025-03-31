@@ -16,17 +16,17 @@ const PhoneCoverItem = ({ cover, mref, disabled }) => {
       className={`md:w-[200px] md:h-[300px] flex flex-col m-auto text-center cursor-pointer ${
         disabled ? "bg-gray-50 !cursor-none" : ""
       }`}
-      onClick={navigateToPhoneReview}
     >
       <img
         src={`${ImageURL}${imageUrl}`}
         className="!h-[200px] !w-[100px] object-cover m-auto"
+        onClick={navigateToPhoneReview}
+
       />
       <p className="text-sm my-1.5 font-normal text-gray-600">{name}</p>
       <p className="my-1.5 font-bold text-black">${price}</p>
-
       <div className="m-auto">
-        <AddToCart key={id + "cart"} id={id} data={cover} />
+        <AddToCart key={id + "cart"} id={id} data={cover} isListView={true}/>
       </div>
     </div>
   );

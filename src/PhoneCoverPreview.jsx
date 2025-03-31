@@ -4,20 +4,32 @@ import WrappedContainer from "./components/common/WrappedContainer";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useGetCustomPhoneCoverQuery } from "./store/services/PhoneApi";
 import { OrbitProgress } from "react-loading-indicators";
 import { ImageURL } from "./utils/config";
 import ModelDropDown from "./components/common/ModelDropDown";
+import { useSelector } from "react-redux";
 
 const PhoneCoverPreview = () => {
   const { id } = useParams();
   const { data, error, isLoading, refetch } = useGetCustomPhoneCoverQuery(id);
+  const carts = useSelector((store) => store.cart.carts);
+  const existedCartItem = useMemo(() => {
+    const data = carts?.find((cart) => cart.id === id);
+    return data;
+  }, [carts, id]);
+  const [modelVal, setModelVal] = useState(
+    existedCartItem ? existedCartItem.model : 0
+  );
+
   useEffect(() => {
     refetch();
   }, []);
 
-  const handleConfigOnClick = () => {};
+  const handleConfigOnClick = (index) => {
+    setModelVal(index);
+  };
   if (isLoading) {
     return (
       <div className="w-full h-full">
@@ -33,9 +45,10 @@ const PhoneCoverPreview = () => {
       {data && (
         <div className="grid md:grid-cols-2">
           <Zoom>
-            <img src={`${ImageURL}${data.imageUrl}`} />
+            <img src={`${ImageURL}${data.imageUrl}`}/>
           </Zoom>
-          <div className="pt-[10%]">
+          <div className="pt-[10%] flex flex-col items-center">
+            <div>
             <h1 className="font-normal text-gray-900 text-[20px] my-1.5">
               {data.name}
             </h1>
@@ -50,8 +63,13 @@ const PhoneCoverPreview = () => {
               <span>FREE DELIVERY</span>
             </h3>
             <div className="w-[200px]">
-              <label className="font-medium text-sm text-gray-700">Select Model</label>
-              <ModelDropDown handleConfigOnClick={handleConfigOnClick}/>
+              <label className="font-medium text-sm text-gray-700">
+                Select Model
+              </label>
+              <ModelDropDown
+                handleConfigOnClick={handleConfigOnClick}
+                seletedModel={modelVal}
+              />
             </div>
             <ul className="text-gray-500 font-normal text-sm my-8">
               <li className="pb-1">- Metal Back With A Glossy Finish</li>
@@ -67,9 +85,10 @@ const PhoneCoverPreview = () => {
               <label className="pl-1.5">Add Flexible Glass Screen Guard</label>
             </div>
             <div className="flex start-0 my-2.5">
-              <AddToCart id={id} data={data} />
+              <AddToCart id={id} data={{ ...data, model: modelVal }} />
             </div>
           </div>
+        </div>
         </div>
       )}
     </WrappedContainer>

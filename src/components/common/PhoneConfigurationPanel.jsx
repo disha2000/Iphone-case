@@ -44,7 +44,7 @@ const PhoneConfigurationPanel = ({
 
           <div>
             <label className="font-medium text-sm text-gray-600">Model</label>
-            <ModelDropDown handleConfigOnClick={handleConfigOnClick} />
+            <ModelDropDown handleConfigOnClick={handleConfigOnClick} seletedModel={customizeForm?.model}/>
           </div>
 
           <MateiralForm

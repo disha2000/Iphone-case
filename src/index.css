@@ -7,6 +7,9 @@
 @import "tailwindcss";
 
 @layer base {
+  [data-state="open"][data-slot="dialog-overlay"] {
+    background-color: rgba(0, 0, 0, 0) !important;
+  }
   html {
     font-family: "Recursive", sans-serif;
   }

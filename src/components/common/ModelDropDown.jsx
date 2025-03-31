@@ -7,14 +7,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { mobileListConfig } from "@/utils/config";
 
-export default function ModelDropDown({ handleConfigOnClick, className }) {
-  const [checked, setChecked] = useState(0);
-  const handleOnChange = (index) => {
+export default function ModelDropDown({ handleConfigOnClick, className, seletedModel }) {
+  const [checked, setChecked] = useState(seletedModel || 0);
+  const handleOnChange = (index,e) => {
     setChecked(index);
-    handleConfigOnClick(index, "model");
+    handleConfigOnClick(index, "model",e);
   };
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild className="my-1.5">
         <div
           variant="outline"
@@ -26,7 +26,7 @@ export default function ModelDropDown({ handleConfigOnClick, className }) {
           {mobileListConfig[checked].value}
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 text-sm">
+      <DropdownMenuContent className="w-56 text-sm" >
         {mobileListConfig.map((phone, index) => (
           <DropdownMenuCheckboxItem
             key={index}

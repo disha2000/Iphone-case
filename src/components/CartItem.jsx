@@ -44,7 +44,6 @@ const CartItem = ({ cart }) => {
         </p>
         <p className="font-bold text-gray-700">${price}</p>
         <p className="text-xs text-gray-700 font-normal">
-          {" "}
           <Check className="inline-block size-5 text-indigo-500 mr-1" />
           Delivery by <span className="font-bold">18 Mar 2025</span>
         </p>
@@ -59,7 +58,7 @@ const CartItem = ({ cart }) => {
           Material: {materialName}
         </p>
         <p className="text-sm font-normal text-gray-700">
-          Finish: {finishName}
+          Model: {modelName}
         </p>
         <p className="font-bold text-gray-700">${price}</p>
         <p className="text-xs text-gray-700 font-normal">
